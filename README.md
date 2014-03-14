@@ -7,8 +7,9 @@ _Still in heavy development._
 
 Supports:
 
-* Playing media and audio
-* Displaying webpages (Coming Soon)
+* Playing via default media receiver
+* Playing via custom media receiver (Coming Soon)
+* Displaying HTML via custom receiver (Coming Soon)
 
 Important Notes:
 
@@ -18,8 +19,10 @@ Important Notes:
 * The [Chromecast extension](https://chrome.google.com/webstore/detail/google-cast/boadgeojelhgndaghljhdicfkmllpafd?hl=en) is required as it will pop open when users try to cast.
 * Here's all the [official docs](https://developers.google.com/cast/docs/developers)
 
-Playing Media/Audio
+Playing via default media receiver
 ------------------------
+
+Want to just play media right now?
 
 ```coffee
   castAway = new CastAway()
@@ -52,13 +55,20 @@ Playing Media/Audio
       # Error connecting
 ```
 
-Displaying Webpages
+Playing via custom media receiver
 ------------------------
 
-```coffee
-  castConnection = new CastConnection()
-  castConnection.connect ->
-    castConnection.requestSession (castPage) ->
+Want all the baked in goodness of the default media receiver, but your own custom look via CSS?
 
-    # Coming soon!
+```js
+  # Coming soon
+```
+
+Displaying HTML via custom receiver
+------------------------
+
+Want send HTML/CSS/JS to a chromecast and do everything yourself to impress your friends and win influence?
+
+```coffee
+  # Coming soon!
 ```
