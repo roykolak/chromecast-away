@@ -2,7 +2,7 @@ castAway = new CastAway()
 
 castAway.initialize
   receiversAvailable: ->
-    castConnection.requestSession
+    castAway.requestSession
       success: (receiver) ->
         media =
           url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
