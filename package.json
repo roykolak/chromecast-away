@@ -1,0 +1,17 @@
+{
+  "name": "chromecast-wrapper",
+  "description": "A friendly Chromecast wrapper",
+  "version": "0.0.1",
+  "author": "Roy Kolak <roy.kolak@gmail.com>",
+  "scripts": {
+    "start": "node_modules/.bin/coffee -w -c ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/roykolak/chromecast-wrapper.git"
+  },
+  "devDependencies": {
+    "coffee-script": "1.7.0"
+  },
+  "license": "MIT"
+}
