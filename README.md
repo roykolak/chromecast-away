@@ -1,4 +1,4 @@
-Chromecast Wrapper
+Chromecast-Away
 =====================
 
 A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.
