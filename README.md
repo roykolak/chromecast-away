@@ -22,15 +22,34 @@ Playing Media/Audio
 ------------------------
 
 ```coffee
-  castConnection = new CastConnection()
-  castConnection.connect ->
-    castConnection.requestSession (castMedia) ->
-      url = 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
-      castMedia.load url: url, contentType: 'audio/mpeg', ->
-        castMedia.pause()
-        castMedia.play()
-        castMedia.stop()
-        castMedia.quit() # kills session, releases chromecast
+  castAway = new CastAway()
+  castAway.initialize
+    receiversAvailable: ->
+      castConnection.requestSession
+        success: (receiver) ->
+          media =
+            url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
+            contentType: 'audio/mpeg'
+
+          receiver.load media,
+            success: (controls) ->
+              controls.pause()
+              controls.play()
+              controls.stop()
+              controls.seek(100) # time in seconds
+              receiver.release() # kills session, releases chromecast
+
+            error: (data) ->
+              # Error loading media
+
+        error: (data) ->
+          # Error requesting session
+
+    receiversUnAvailable: ->
+      # No receivers found
+
+    error: (data) ->
+      # Error connecting
 ```
 
 Displaying Webpages

@@ -56,18 +56,8 @@ class Receiver
     )
 
 class CustomReceiver extends Receiver
-  load: (media, callbacks) ->
-    throw "No media url set" unless media.url
-    throw "No media content type set" unless media.contentType
-
-    mediaInfo = new @cast.media.MediaInfo(media.url, media.contentType)
-    request = new @cast.media.LoadRequest(mediaInfo)
-
-    @session.sendMessage request, (media) =>
-      @media = media
-      callbacks.success?()
-    , (args...) ->
-      callbacks.error?(args...)
+  load: (url, callbacks) ->
+    # todo
 
 
 class MediaReceiver extends Receiver
@@ -85,7 +75,7 @@ class MediaReceiver extends Receiver
 
 class MediaControls
   constructor: (@receiver) ->
-    throw "No Media Receiver passed" unless @receiver
+    throw "No receiver passed" unless @receiver
 
   play: (success, error) ->
     @receiver.play null,
@@ -102,9 +92,10 @@ class MediaControls
       (args...) -> success?(args...),
       (args...) -> error?(args...)
 
-  seek: (success, error) ->
-    @receiver.seek null,
+  seek: (time, success, error) ->
+    seekRequest = @cast.media.SeekRequest(time)
+    @receiver.seek seekRequest,
       (args...) -> success?(args...),
       (args...) -> error?(args...)
 
-window.CastConnection = CastConnection
+window.CastAway = CastAway
