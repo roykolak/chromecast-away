@@ -1,12 +1,33 @@
-castConnection = new CastConnection()
-castConnection.connect (data) ->
-  castConnection.requestSession (castMedia) ->
-    url = 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
+castAway = new CastAway()
 
-    castMedia.load url: url, contentType: 'audio/mpeg', ->
-      document.getElementsByClassName('pause')[0].addEventListener 'click', (ev) ->
-        castMedia.pause()
-      document.getElementsByClassName('play')[0].addEventListener 'click', (ev) ->
-        castMedia.play()
-      document.getElementsByClassName('exit')[0].addEventListener 'click', (ev) ->
-        castMedia.quit()
+castAway.initialize
+  receiversAvailable: ->
+    castConnection.requestSession
+      success: (receiver) ->
+        media =
+          url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
+          contentType: 'audio/mpeg'
+
+        receiver.load media,
+          success: (controls) ->
+            attachMediaControls(receiver, controls)
+
+          error: (data) ->
+            # Error loading media
+
+      error: (data) ->
+        # Error requesting session
+
+  receiversUnAvailable: ->
+    # No receivers found
+
+  error: (data) ->
+    # Error connecting
+
+attachMediaControls = (receiver, controls) ->
+  document.getElementsByClassName('pause')[0].addEventListener 'click', (ev) ->
+    controls.pause()
+  document.getElementsByClassName('play')[0].addEventListener 'click', (ev) ->
+    controls.play()
+  document.getElementsByClassName('release')[0].addEventListener 'click', (ev) ->
+    receiver.release()
