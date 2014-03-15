@@ -2,7 +2,9 @@
 (function() {
   var attachMediaControls, castAway;
 
-  castAway = new CastAway();
+  castAway = new CastAway({
+    namespace: "sample.test.default_media.receiver"
+  });
 
   castAway.initialize({
     receiversAvailable: function() {

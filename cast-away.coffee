@@ -13,8 +13,8 @@ class CastAway
           (data...) => @sessionListener(data...),
           (data...) => @receiverListener(data...)
 
-        success = ->
-        error = (args...) -> @callbacks.error?(args...)
+        success = -> # success!
+        error = (args...) => @callbacks.error?(args...)
 
         @cast.initialize(apiConfig, success, error)
 
@@ -34,17 +34,17 @@ class CastAway
   receiverMessage: (namespace, message) ->
 
   requestSession: (callbacks) ->
-    @cast.requestSession (session) ->
+    @cast.requestSession (session) =>
       receiver = if @applicationID
         new CustomReceiver(session)
       else
-        new MediaReceiver(session)
+        new MediaReceiver(session, @namespace)
       callbacks.success?(receiver)
     , (args...) ->
       callbacks.error?(args...)
 
 class Receiver
-  constructor: (@session) ->
+  constructor: (@session, @namespace) ->
     throw "chrome.cast namespace not found" unless chrome.cast
     @cast = chrome.cast
 
@@ -68,8 +68,8 @@ class MediaReceiver extends Receiver
     mediaInfo = new @cast.media.MediaInfo(media.url, media.contentType)
     request = new @cast.media.LoadRequest(mediaInfo)
 
-    @session.sendMessage request, (mediaReceiver) =>
-      callbacks.success?(new MediaControls(mediaReceiver))
+    @session.loadMedia request, (receiver) =>
+      callbacks.success?(new MediaControls(receiver))
     , (args...) ->
       callbacks.error?(args...)
 

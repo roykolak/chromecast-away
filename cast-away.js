@@ -36,7 +36,7 @@
             error = function() {
               var args, _base;
               args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-              return typeof (_base = this.callbacks).error === "function" ? _base.error.apply(_base, args) : void 0;
+              return typeof (_base = _this.callbacks).error === "function" ? _base.error.apply(_base, args) : void 0;
             };
             return _this.cast.initialize(apiConfig, success, error);
           }
@@ -65,11 +65,13 @@
     CastAway.prototype.receiverMessage = function(namespace, message) {};
 
     CastAway.prototype.requestSession = function(callbacks) {
-      return this.cast.requestSession(function(session) {
-        var receiver;
-        receiver = this.applicationID ? new CustomReceiver(session) : new MediaReceiver(session);
-        return typeof callbacks.success === "function" ? callbacks.success(receiver) : void 0;
-      }, function() {
+      return this.cast.requestSession((function(_this) {
+        return function(session) {
+          var receiver;
+          receiver = _this.applicationID ? new CustomReceiver(session) : new MediaReceiver(session, _this.namespace);
+          return typeof callbacks.success === "function" ? callbacks.success(receiver) : void 0;
+        };
+      })(this), function() {
         var args;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         return typeof callbacks.error === "function" ? callbacks.error.apply(callbacks, args) : void 0;
@@ -81,8 +83,9 @@
   })();
 
   Receiver = (function() {
-    function Receiver(session) {
+    function Receiver(session, namespace) {
       this.session = session;
+      this.namespace = namespace;
       if (!chrome.cast) {
         throw "chrome.cast namespace not found";
       }
@@ -138,9 +141,9 @@
       }
       mediaInfo = new this.cast.media.MediaInfo(media.url, media.contentType);
       request = new this.cast.media.LoadRequest(mediaInfo);
-      return this.session.sendMessage(request, (function(_this) {
-        return function(mediaReceiver) {
-          return typeof callbacks.success === "function" ? callbacks.success(new MediaControls(mediaReceiver)) : void 0;
+      return this.session.loadMedia(request, (function(_this) {
+        return function(receiver) {
+          return typeof callbacks.success === "function" ? callbacks.success(new MediaControls(receiver)) : void 0;
         };
       })(this), function() {
         var args;
