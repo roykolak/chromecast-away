@@ -7,7 +7,8 @@
 
   CastAway = (function() {
     function CastAway(_arg) {
-      this.applicationID = _arg.applicationID, this.namespace = _arg.namespace;
+      var _ref;
+      _ref = _arg != null ? _arg : {}, this.applicationID = _ref.applicationID, this.namespace = _ref.namespace;
       if (!chrome.cast) {
         throw "chrome.cast namespace not found";
       }
@@ -114,27 +115,7 @@
       return CustomReceiver.__super__.constructor.apply(this, arguments);
     }
 
-    CustomReceiver.prototype.load = function(media, callbacks) {
-      var mediaInfo, request;
-      if (!media.url) {
-        throw "No media url set";
-      }
-      if (!media.contentType) {
-        throw "No media content type set";
-      }
-      mediaInfo = new this.cast.media.MediaInfo(media.url, media.contentType);
-      request = new this.cast.media.LoadRequest(mediaInfo);
-      return this.session.sendMessage(request, (function(_this) {
-        return function(media) {
-          _this.media = media;
-          return typeof callbacks.success === "function" ? callbacks.success() : void 0;
-        };
-      })(this), function() {
-        var args;
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        return typeof callbacks.error === "function" ? callbacks.error.apply(callbacks, args) : void 0;
-      });
-    };
+    CustomReceiver.prototype.load = function(url, callbacks) {};
 
     return CustomReceiver;
 
@@ -176,7 +157,7 @@
     function MediaControls(receiver) {
       this.receiver = receiver;
       if (!this.receiver) {
-        throw "No Media Receiver passed";
+        throw "No receiver passed";
       }
     }
 
@@ -216,8 +197,10 @@
       });
     };
 
-    MediaControls.prototype.seek = function(success, error) {
-      return this.receiver.seek(null, function() {
+    MediaControls.prototype.seek = function(time, success, error) {
+      var seekRequest;
+      seekRequest = this.cast.media.SeekRequest(time);
+      return this.receiver.seek(seekRequest, function() {
         var args;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         return typeof success === "function" ? success.apply(null, args) : void 0;
@@ -232,6 +215,6 @@
 
   })();
 
-  window.CastConnection = CastConnection;
+  window.CastAway = CastAway;
 
 }).call(this);

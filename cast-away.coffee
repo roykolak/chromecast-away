@@ -1,5 +1,5 @@
 class CastAway
-  constructor: ({@applicationID, @namespace}) ->
+  constructor: ({@applicationID, @namespace} = {}) ->
     throw "chrome.cast namespace not found" unless chrome.cast
     @cast = chrome.cast
 

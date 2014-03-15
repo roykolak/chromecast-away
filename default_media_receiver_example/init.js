@@ -6,7 +6,7 @@
 
   castAway.initialize({
     receiversAvailable: function() {
-      return castConnection.requestSession({
+      return castAway.requestSession({
         success: function(receiver) {
           var media;
           media = {
