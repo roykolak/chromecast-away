@@ -14,34 +14,40 @@ class CastAway
           (data...) => @receiverListener(data...)
 
         success = -> # success!
-        error = (args...) => @callbacks.error?(args...)
+        error = (args...) => @emit 'initialize:error'
 
         @cast.initialize(apiConfig, success, error)
 
   sessionListener: (session) ->
+    @session = session.media[0] if session.media.length != 0
     session.addUpdateListener(@sessionUpdateListener)
-    session.addMessageListener(@namespace, @receiverMessage)
 
   receiverListener: (receiver) ->
-    if receiver == @cast.ReceiverAvailability.AVAILABLE
-      @callbacks.receiversAvailable?()
+    state = if receiver == @cast.ReceiverAvailability.AVAILABLE
+      'available'
     else
-      @callbacks.receiversUnavailable?()
+      'unavailable'
+    @emit "receivers:#{state}"
 
   sessionUpdateListener: (isAlive) ->
-    console.log isAlive
+    unless isAlive
+      @session = null
+      @emit 'session:release'
 
-  receiverMessage: (namespace, message) ->
-
-  requestSession: (callbacks) ->
-    @cast.requestSession (session) =>
-      receiver = if @applicationID
+  createSession: (callbacks) ->
+    getReceiver = (session) ->
+      if @applicationID
         new CustomReceiver(session)
       else
-        new MediaReceiver(session, @namespace)
-      callbacks.success?(receiver)
-    , (args...) ->
-      callbacks.error?(args...)
+        new MediaReceiver(session)
+
+    if @session?
+      callbacks.success?(getReceiver(@session))
+    else
+      @cast.requestSession (session) =>
+        callbacks.success?(getReceiver(session))
+      , (args...) ->
+        callbacks.error?(args...)
 
 class Receiver
   constructor: (@session, @namespace) ->

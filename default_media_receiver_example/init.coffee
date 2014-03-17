@@ -1,34 +1,49 @@
 castAway = new CastAway
   namespace: "sample.test.default_media.receiver"
 
-castAway.initialize
-  receiversAvailable: ->
-    castAway.requestSession
-      success: (receiver) ->
-        media =
-          url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
-          contentType: 'audio/mpeg'
+castAway.on 'receivers:available', ->
+  # Receivers found
 
-        receiver.load media,
-          success: (controls) ->
-            attachMediaControls(receiver, controls)
+castAway.on 'receivers:unavailable', ->
+  # No receivers found
 
-          error: (data) ->
-            # Error loading media
+castAway.on 'initialize:error', ->
+  # Error initializing
+
+castAway.on 'session:release', ->
+  # Receiver session ended
+
+
+castAway.initialize()
+
+castEl = document.getElementsByClassName('cast')[0]
+castEl.addEventListener 'click', (ev) ->
+  # verify that receivers were found
+  castAway.createSession (receiver) ->
+    media =
+      url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
+      contentType: 'audio/mpeg'
+
+    console.log receiver
+    receiver.load media,
+      success: (controls) ->
+        attachMediaControls(receiver, controls)
 
       error: (data) ->
-        # Error requesting session
+        # Error loading media
 
-  receiversUnAvailable: ->
-    # No receivers found
-
-  error: (data) ->
-    # Error connecting
 
 attachMediaControls = (receiver, controls) ->
-  document.getElementsByClassName('pause')[0].addEventListener 'click', (ev) ->
+  pauseEl = document.getElementsByClassName('pause')[0]
+  pauseEl.addEventListener 'click', (ev) ->
     controls.pause()
-  document.getElementsByClassName('play')[0].addEventListener 'click', (ev) ->
+
+  playEl = document.getElementsByClassName('play')[0]
+  playEl.addEventListener 'click', (ev) ->
     controls.play()
-  document.getElementsByClassName('release')[0].addEventListener 'click', (ev) ->
-    receiver.release()
+
+  releaseEl = document.getElementsByClassName('release')[0]
+  releaseEl.addEventListener 'click', (ev) ->
+    castAway.getReceiver
+      success: (receiver) ->
+        receiver.release()

@@ -4,14 +4,15 @@
   "version": "0.0.1",
   "author": "Roy Kolak <roy.kolak@gmail.com>",
   "scripts": {
-    "start": "node_modules/.bin/coffee -w -c ."
+    "start": "node_modules/.bin/cjsify -w src/cast-away.coffee -o cast-away.js"
   },
   "repository": {
     "type": "git",
     "url": "http://github.com/roykolak/chromecast-wrapper.git"
   },
   "devDependencies": {
-    "coffee-script": "1.7.0"
+    "coffee-script-redux": "2.0.0-beta8",
+    "commonjs-everywhere": "0.9.7"
   },
   "license": "MIT"
 }
