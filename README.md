@@ -38,6 +38,7 @@ castAway.on 'receivers:available', ->
         artist: 'Will Smith'
         images: ["http://www.willy-smith.com/men-in-black....jpg"]
 
+      # Also available: '.photo', '.movie', '.tvShow'
       session.music config,
         success: (controls) ->
           # Interact with the media via controls
