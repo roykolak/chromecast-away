@@ -26,33 +26,53 @@ Want to just play media right now?
 
 ```coffee
   castAway = new CastAway()
+
+  castAway.on 'receivers:available', ->
+    # receivers available, safe to request a session
+
+    castAway.requestSession
+      success: (session) ->
+        config =
+          url: 'https://s3.amazonaws.com/...mp3'
+          contentType: 'audio/mpeg'
+          artist: 'Will Smith'
+          images: ["http://www.willy-smith.com/men-in-black....jpg"]
+
+        session.music config,
+          success: (controls) ->
+            # Interact with the media via controls
+            $('.pause').click (ev) -> controls.pause()
+            $('.play').click (ev) -> controls.play()
+            $('.stop').click (ev) -> controls.stop()
+            $('.release').click (ev) -> session.release()
+
+            # will emit the following events...
+            session.on 'pause', -> # media paused
+            session.on 'play', -> # media playing
+            session.on 'stop', -> # media stopped
+            session.on 'seek', -> # media seeking
+            session.on 'error', -> # media errored
+            session.on 'idle', -> # media idle
+            session.on 'load', -> # media loading
+
+          error: (data) ->
+            # Error loading media
+
+      error: ->
+        # error starting session (user canceled it)
+
+  castAway.on 'receivers:unavailable', ->
+    console.log 'no receivers found'
+
+  castAway.on 'existingMediaFound', (session, controls) ->
+    # found existing media session, interact with it via
+    # the passed session and controls.
+
   castAway.initialize
-    receiversAvailable: ->
-      castAway.requestSession
-        success: (receiver) ->
-          media =
-            url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3'
-            contentType: 'audio/mpeg'
-
-          receiver.load media,
-            success: (controls) ->
-              controls.pause()
-              controls.play()
-              controls.stop()
-              controls.seek(100) # time in seconds
-              receiver.release() # kills session, releases chromecast
-
-            error: (data) ->
-              # Error loading media
-
-        error: (data) ->
-          # Error requesting session
-
-    receiversUnAvailable: ->
-      # No receivers found
-
+    success: (data) ->
+      # successfully initialized, party
     error: (data) ->
-      # Error connecting
+      # unsuccessfully initialized, cry
 ```
 
 Playing via custom media receiver
