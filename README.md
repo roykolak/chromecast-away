@@ -22,7 +22,7 @@ Important Notes:
 Playing via default media receiver
 ------------------------
 
-Want to just play media right now?
+Want to just play media (music, video, photos) right now with some baked in support for displaying basic metadata about the content?
 
 ```coffee
 castAway = new CastAway()
@@ -38,7 +38,7 @@ castAway.on 'receivers:available', ->
         artist: 'Will Smith'
         images: ["http://www.willy-smith.com/men-in-black....jpg"]
 
-      # Also available: '.photo', '.movie', '.tvShow'
+      # Also available: '.photo', '.movie', '.tvShow' ... see examples
       session.music config,
         success: (controls) ->
           # Interact with the media via controls
