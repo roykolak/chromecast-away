@@ -1,4 +1,4 @@
-Chromecast-Away
+
 =====================
 
 A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.
@@ -63,7 +63,7 @@ castAway.on 'receivers:available', ->
       # error starting session (user canceled it)
 
 castAway.on 'receivers:unavailable', ->
-  console.log 'no receivers found'
+  # No receivers found
 
 castAway.on 'existingMediaFound', (session, controls) ->
   # found existing media session, interact with it via
