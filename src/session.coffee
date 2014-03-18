@@ -32,16 +32,51 @@ class Session extends EventEmitter
     throw "Content-type required for music" unless config.contentType
 
     mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
-
     metadata = new chrome.cast.media.MusicTrackMediaMetadata()
     metadata.metadataType = chrome.cast.media.MetadataType.MUSIC_TRACK
+    mediaInfo.metadata = assignMetadata(metadata, config)
 
-    for key, value of config
-      if key == 'images'
-        value = (new @cast.Image(image) for image in value)
-      metadata[key] = value
+    @load mediaInfo, (media) =>
+      callbacks.success?(new MediaControls(media))
+    , (args...) ->
+      callbacks.error?(args...)
 
-    mediaInfo.metadata = metadata
+  tvShow: (config = {}, callbacks) ->
+    throw "Url required for tv show" unless config.url
+    throw "Content-type required for tv show" unless config.contentType
+
+    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    metadata = new chrome.cast.media.TvShowMediaMetadata()
+    metadata.metadataType = chrome.cast.media.MetadataType.TV_SHOW
+    mediaInfo.metadata = assignMetadata(metadata, config)
+
+    @load mediaInfo, (media) =>
+      callbacks.success?(new MediaControls(media))
+    , (args...) ->
+      callbacks.error?(args...)
+
+  movie: (config = {}, callbacks) ->
+    throw "Url required for movie" unless config.url
+    throw "Content-type required for movie" unless config.contentType
+
+    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    metadata = new chrome.cast.media.MovieMediaMetadata()
+    metadata.metadataType = chrome.cast.media.MetadataType.MOVIE
+    mediaInfo.metadata = assignMetadata(metadata, config)
+
+    @load mediaInfo, (media) =>
+      callbacks.success?(new MediaControls(media))
+    , (args...) ->
+      callbacks.error?(args...)
+
+  photo: (config = {}, callbacks) ->
+    throw "Url required for photo" unless config.url
+    throw "Content-type required for photo" unless config.contentType
+
+    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    metadata = new chrome.cast.media.PhotoMediaMetadata()
+    metadata.metadataType = chrome.cast.media.MetadataType.PHOTO
+    mediaInfo.metadata = assignMetadata(metadata, config)
 
     @load mediaInfo, (media) =>
       callbacks.success?(new MediaControls(media))
@@ -54,5 +89,11 @@ class Session extends EventEmitter
       ((args...) -> success?(args...)),
       ((args...) -> error?(args...))
     )
+
+assignMetadata = (metadata, config) ->
+  for key, value of config
+    value = (new chrome.cast.Image(image) for image in value) if key == 'images'
+    metadata[key] = value
+  metadata
 
 module.exports = Session
