@@ -13,7 +13,8 @@
   "devDependencies": {
     "coffee-script": "1.7.1",
     "browserify": "3.32.1",
-    "watch": "0.8.0"
+    "watch": "0.8.0",
+    "http-server": "0.6.1"
   },
   "license": "MIT"
 }
