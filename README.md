@@ -7,6 +7,8 @@ _Still in heavy development._
 
 Supports:
 
+(Receiver = the app that's running on the chromecast)
+
 * Playing via default media receiver
 * Playing via custom media receiver (Coming Soon)
 * Displaying HTML via custom receiver (Coming Soon)
@@ -18,6 +20,7 @@ Important Notes:
 * You must include Google's [official js script](https://www.gstatic.com/cv/js/sender/v1/cast_sender.js) on the page
 * The [Chromecast extension](https://chrome.google.com/webstore/detail/google-cast/boadgeojelhgndaghljhdicfkmllpafd?hl=en) is required as it will pop open when users try to cast.
 * Here's all the [official docs](https://developers.google.com/cast/docs/developers)
+* Inspect the Chromecast by hitting http://CHROMECAST-IP:9222 (get the ip via the phone app)
 
 Playing via default media receiver
 ------------------------
