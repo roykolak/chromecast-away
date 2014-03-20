@@ -6,11 +6,14 @@ exec('./node_modules/.bin/coffee -w -o examples/default_media_receiver_example/ 
 exec('./node_modules/.bin/http-server examples -p 8989')
 console.log "Running examples at localhost:8989"
 
-watch.createMonitor 'lib', (monitor) ->
-  callback = (f) ->
-    console.log "bundling\n"
-    exec('./node_modules/.bin/browserify lib/cast-away.js -o cast-away.js')
+callback = ->
+  console.log "bundling\n"
+  exec('./node_modules/.bin/browserify lib/cast-away.js -o cast-away.js')
+  exec('./node_modules/.bin/uglifyjs cast-away.js --screw-ie8 -o cast-away.min.js')
 
+callback()
+
+watch.createMonitor 'lib', (monitor) ->
   monitor.on "changed", callback
   monitor.on "removed", callback
   monitor.on "created", callback
