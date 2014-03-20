@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Chromecast-away : A friendly wrapper for the Chromecast, no relation to Tom Hanks" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Chromecast-away</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/roykolak/chromecast-away">View on GitHub</a>
+
+          <h1 id="project_title">Chromecast-away</h1>
+          <h2 id="project_tagline">A friendly wrapper for the Chromecast, no relation to Tom Hanks</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/roykolak/chromecast-away/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/roykolak/chromecast-away/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1></h1>
+
+<p>A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.</p>
+
+<p><em>Still in heavy development.</em></p>
+
+<p>Supports:</p>
+
+<ul>
+<li>Playing via default media receiver</li>
+<li>Playing via custom media receiver (Coming Soon)</li>
+<li>Displaying HTML via custom receiver (Coming Soon)</li>
+</ul><p>Important Notes:</p>
+
+<ul>
+<li>Register your chromecast's ID number <a href="https://developers.google.com/cast/docs/registration#RegisterDevice">with Google</a>
+</li>
+<li>Configure your chromecast to send it's ID number via the Chromecast app on your telephone</li>
+<li>You must include Google's <a href="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js">official js script</a> on the page</li>
+<li>The <a href="https://chrome.google.com/webstore/detail/google-cast/boadgeojelhgndaghljhdicfkmllpafd?hl=en">Chromecast extension</a> is required as it will pop open when users try to cast.</li>
+<li>Here's all the <a href="https://developers.google.com/cast/docs/developers">official docs</a>
+</li>
+</ul><h2>
+<a name="playing-via-default-media-receiver" class="anchor" href="#playing-via-default-media-receiver"><span class="octicon octicon-link"></span></a>Playing via default media receiver</h2>
+
+<p>Want to just play media (music, video, photos) right now with some baked in support for displaying basic metadata about the content?</p>
+
+<div class="highlight highlight-coffee"><pre><span class="nv">castAway = </span><span class="k">new</span> <span class="nx">CastAway</span><span class="p">()</span>
+
+<span class="nx">castAway</span><span class="p">.</span><span class="nx">on</span> <span class="s">'receivers:available'</span><span class="p">,</span> <span class="nf">-&gt;</span>
+  <span class="c1"># receivers available, safe to request a session</span>
+
+  <span class="nx">castAway</span><span class="p">.</span><span class="nx">requestSession</span>
+    <span class="nv">success: </span><span class="nf">(session) -&gt;</span>
+      <span class="nv">config =</span>
+        <span class="nv">url: </span><span class="s">'https://s3.amazonaws.com/...mp3'</span>
+        <span class="nv">contentType: </span><span class="s">'audio/mpeg'</span>
+        <span class="nv">artist: </span><span class="s">'Will Smith'</span>
+        <span class="nv">images: </span><span class="p">[</span><span class="s">"http://www.willy-smith.com/men-in-black....jpg"</span><span class="p">]</span>
+
+      <span class="c1"># Also available: '.photo', '.movie', '.tvShow' ... see examples</span>
+      <span class="nx">session</span><span class="p">.</span><span class="nx">music</span> <span class="nx">config</span><span class="p">,</span>
+        <span class="nv">success: </span><span class="nf">(controls) -&gt;</span>
+          <span class="c1"># Interact with the media via controls</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">'.pause'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">controls</span><span class="p">.</span><span class="nx">pause</span><span class="p">()</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">'.play'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">controls</span><span class="p">.</span><span class="nx">play</span><span class="p">()</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">'.stop'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">controls</span><span class="p">.</span><span class="nx">stop</span><span class="p">()</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s">'.release'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">session</span><span class="p">.</span><span class="nx">release</span><span class="p">()</span>
+
+          <span class="c1"># will emit the following events...</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'pause'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media paused</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'play'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media playing</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'stop'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media stopped</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'seek'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media seeking</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'error'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media errored</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'idle'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media idle</span>
+          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'load'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media loading</span>
+
+        <span class="nv">error: </span><span class="nf">(data) -&gt;</span>
+          <span class="c1"># Error loading media</span>
+
+    <span class="nv">error: </span><span class="nf">-&gt;</span>
+      <span class="c1"># error starting session (user canceled it)</span>
+
+<span class="nx">castAway</span><span class="p">.</span><span class="nx">on</span> <span class="s">'receivers:unavailable'</span><span class="p">,</span> <span class="nf">-&gt;</span>
+  <span class="c1"># No receivers found</span>
+
+<span class="nx">castAway</span><span class="p">.</span><span class="nx">on</span> <span class="s">'existingMediaFound'</span><span class="p">,</span> <span class="nf">(session, controls) -&gt;</span>
+  <span class="c1"># found existing media session, interact with it via</span>
+  <span class="c1"># the passed session and controls.</span>
+
+<span class="nx">castAway</span><span class="p">.</span><span class="nx">initialize</span>
+  <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
+    <span class="c1"># successfully initialized, party</span>
+  <span class="nv">error: </span><span class="nf">(data) -&gt;</span>
+    <span class="c1"># unsuccessfully initialized, cry</span>
+</pre></div>
+
+<h2>
+<a name="playing-via-custom-media-receiver" class="anchor" href="#playing-via-custom-media-receiver"><span class="octicon octicon-link"></span></a>Playing via custom media receiver</h2>
+
+<p>Want all the baked in goodness of the default media receiver, but your own custom look via CSS?</p>
+
+<div class="highlight highlight-js"><pre>  <span class="err">#</span> <span class="nx">Coming</span> <span class="nx">soon</span>
+</pre></div>
+
+<h2>
+<a name="displaying-html-via-custom-receiver" class="anchor" href="#displaying-html-via-custom-receiver"><span class="octicon octicon-link"></span></a>Displaying HTML via custom receiver</h2>
+
+<p>Want send HTML/CSS/JS to a chromecast and do everything yourself to impress your friends and win influence?</p>
+
+<div class="highlight highlight-coffee"><pre>  <span class="c1"># Coming soon!</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Chromecast-away maintained by <a href="https://github.com/roykolak">roykolak</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
