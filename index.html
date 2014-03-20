@@ -9,6 +9,47 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Chromecast-away</title>
+    <style>
+      @import url(http://fonts.googleapis.com/css?family=Mr+Dafoe);
+      @import url(http://fonts.googleapis.com/css?family=Monoton);
+
+      .future {
+        position: absolute;
+        left: 0;
+        font-family: 'Mr Dafoe', cursive;
+        font-size: 160px;
+        margin-top: -100px;
+        margin-bottom: 0;
+        color: #EB219B;
+        -webkit-text-fill-color: rgba(253, 90, 250, 1);
+        text-shadow: -2px -2px 0 #FFBAF2;
+        -webkit-filter: drop-shadow(3px 3px 1px #441F62);
+        -webkit-transform: skew(-5deg,-5deg);
+        font-weight: normal;
+        z-index: 2;
+        padding-left: 50px;
+        padding-right: 70px;
+      }
+      .cop {
+        position: relative;
+        font-family: 'Monoton', cursive;
+        font-size: 200px;
+        line-height: 1;
+        margin: 0;
+        margin-top: 100px;
+        font-weight: 400;
+        background-image: -webkit-linear-gradient(#022486 0%, #0AD0FD 30%, #BDFCFC 40%, #D8FFFF 44%, #00081C 44%, #00081C 50%, #074A67 52%, #1CD8FE 60%, #7FEDFE 62%, #96F5FC 70%, #0FD8FA 73%, #0BD2FD 88%, #AFFDFF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-text-stroke: 1px #fff;
+      }
+      .future-cop {
+        position: relative;
+        margin-top: 500px;
+        width: 740px;
+        margin: auto;
+      }
+    </style>
   </head>
 
   <body>
@@ -18,8 +59,11 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/roykolak/chromecast-away">View on GitHub</a>
 
-          <h1 id="project_title">Chromecast-away</h1>
-          <h2 id="project_tagline">A friendly wrapper for the Chromecast, no relation to Tom Hanks</h2>
+          <div class="future-cop">
+            <h3 class="future">Chromecast</h3>
+            <h1 class="cop">Away</h1>
+          </div>
+          <h2 id="project_tagline">A friendly, nonjudgemental wrapper for chromecasting</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/roykolak/chromecast-away/zipball/master">Download this project as a .zip file</a>
@@ -32,8 +76,6 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1></h1>
-
-<p>A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.</p>
 
 <p><em>Still in heavy development.</em></p>
 
@@ -131,11 +173,12 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Chromecast-away maintained by <a href="https://github.com/roykolak">roykolak</a></p>
+        <p>Amazing title art credits for <a href="http://codepen.io/boldfacedesign/details/EoGgD">David Parker</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
-    
+
 
   </body>
 </html>
