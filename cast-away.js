@@ -670,6 +670,12 @@
       this.cast = chrome.cast;
     }
 
+    Session.prototype.sendMessage = function() {
+      var args, _ref;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref = this.session).sendMessage.apply(_ref, args);
+    };
+
     Session.prototype.load = function(mediaInfo, success, error) {
       var request;
       request = new this.cast.media.LoadRequest(mediaInfo);

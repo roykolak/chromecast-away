@@ -6,6 +6,9 @@ class Session extends EventEmitter
     throw "chrome.cast namespace not found" unless chrome.cast
     @cast = chrome.cast
 
+  sendMessage: (args...) ->
+    @session.sendMessage args...
+
   load: (mediaInfo, success, error) ->
     request = new @cast.media.LoadRequest(mediaInfo)
 
