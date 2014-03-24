@@ -8,7 +8,7 @@ class CastAway extends EventEmitter
     throw "chrome.cast namespace not found" unless chrome.cast
     @cast = chrome.cast
 
-  initialize: (@callbacks) ->
+  initialize: (cb) ->
     window['__onGCastApiAvailable'] = (loaded, errorInfo) =>
       if loaded
         app = @applicationID || @cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
@@ -18,8 +18,8 @@ class CastAway extends EventEmitter
           (data...) => @sessionListener(data...),
           (data...) => @receiverListener(data...)
 
-        success = (args...) => callbacks.success?(args...)
-        error = (args...) => callbacks.error?(args...)
+        success = (data) -> cb(null, data)
+        error = (err) -> cb(err)
 
         @cast.initialize(apiConfig, success, error)
 
@@ -45,9 +45,9 @@ class CastAway extends EventEmitter
     unless isAlive
       @currentSession = null
 
-  requestSession: (callbacks) ->
-    @cast.requestSession \
-      (session) -> callbacks.success?(new Session(session)),
-      (args...) -> callbacks.error?([args...])
+  requestSession: (cb) ->
+    onSuccess = (session) -> cb null, new Session(session)
+    onError = (err) -> cb(err)
+    @cast.requestSession onSuccess, onError
 
 window.CastAway = CastAway

@@ -23,8 +23,8 @@ castAway.on "receivers:available", ->
       error: ->
         console.log "Error", arguments
 
-castAway.initialize
-  success: (data) ->
+castAway.initialize (err, data) ->
+  if err
+    console.log "error initialized", err
+  else
     console.log "initialized", data
-  error: (data) ->
-    console.log "error initialized", data

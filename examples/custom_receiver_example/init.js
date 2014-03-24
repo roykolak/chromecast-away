@@ -41,12 +41,11 @@
     });
   });
 
-  castAway.initialize({
-    success: function(data) {
+  castAway.initialize(function(err, data) {
+    if (err) {
+      return console.log("error initialized", err);
+    } else {
       return console.log("initialized", data);
-    },
-    error: function(data) {
-      return console.log("error initialized", data);
     }
   });
 

@@ -5,25 +5,25 @@ class MediaControls
 
     @cast = chrome.cast
 
-  play: (success, error) ->
+  play: (cb=->) ->
     @session.play null,
-      (args...) -> success?(args...),
-      (args...) -> error?(args...)
+      (data) -> cb(null, data),
+      (err) -> cb(err)
 
-  pause: (success, error) ->
+  pause: (cb=->) ->
     @session.pause null,
-      (args...) -> success?(args...),
-      (args...) -> error?(args...)
+      (data) -> cb(null, data)
+      (err) -> cb(err)
 
-  stop: (success, error) ->
+  stop: (cb=->) ->
     @session.stop null,
-      (args...) -> success?(args...),
-      (args...) -> error?(args...)
+      (data) -> cb(null, data)
+      (err) -> cb(err)
 
-  seek: (time, success, error) ->
+  seek: (time, cb=->) ->
     seekRequest = @cast.session.SeekRequest(time)
     @session.seek seekRequest,
-      (args...) -> success?(args...),
-      (args...) -> error?(args...)
+      (data) -> cb(null, data)
+      (err) -> cb(err)
 
 module.exports = MediaControls
