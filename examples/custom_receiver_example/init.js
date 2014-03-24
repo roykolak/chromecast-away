@@ -23,13 +23,15 @@
             val = $("#message").val();
             console.log("Sending " + val);
             $("#message").val("");
-            return session.sendMessage("urn:x-cast:json", JSON.stringify({
+            return session.send("displayMessage", {
               message: val
-            }), (function() {
-              return console.log("success", arguments);
-            }), (function() {
-              return console.log("error", arguments);
-            }));
+            }, function(err, data) {
+              if (err) {
+                return console.log("error", err);
+              } else {
+                return console.log("success", data);
+              }
+            });
           });
         },
         error: function() {

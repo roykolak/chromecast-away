@@ -15,9 +15,11 @@ castAway.on "receivers:available", ->
           val = $("#message").val()
           console.log "Sending #{val}"
           $("#message").val("")
-          session.sendMessage "urn:x-cast:json", JSON.stringify(message: val),
-            (() -> console.log "success", arguments),
-            (() -> console.log "error", arguments)
+          session.send "displayMessage", message: val, (err, data) ->
+            if err
+              console.log "error", err
+            else
+              console.log "success", data
       error: ->
         console.log "Error", arguments
 

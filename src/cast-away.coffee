@@ -1,6 +1,7 @@
 EventEmitter = require('./event_emitter')
 Session = require('./session')
 MediaControls = require('./media_controls')
+CustomReceiver = require('./custom-receiver')
 
 class CastAway extends EventEmitter
   constructor: ({@applicationID, @namespace} = {}) ->
@@ -21,6 +22,11 @@ class CastAway extends EventEmitter
         error = (args...) => callbacks.error?(args...)
 
         @cast.initialize(apiConfig, success, error)
+
+  receive: (config={}) ->
+    @receiver = new CustomReceiver(config, this)
+    @receiver.start()
+    @receiver
 
   sessionListener: (session) ->
     if session.media.length != 0

@@ -2,12 +2,16 @@ EventEmitter = require('./event_emitter')
 MediaControls = require('./media_controls')
 
 class Session extends EventEmitter
-  constructor: (@session) ->
+  constructor: (@session, @castAway) ->
     throw "chrome.cast namespace not found" unless chrome.cast
     @cast = chrome.cast
+    @namespace = @castAway.namespace || "urn:x-cast:json"
 
-  sendMessage: (args...) ->
-    @session.sendMessage args...
+  send: (name, payload={}, cb=->) ->
+    onSuccess = (data) -> cb(null, data)
+    onError = (err) -> cb err
+    data = JSON.stringify(_name: name, _payload: payload)
+    @session.sendMessage @namespace, data, onSuccess, onError
 
   load: (mediaInfo, success, error) ->
     request = new @cast.media.LoadRequest(mediaInfo)
