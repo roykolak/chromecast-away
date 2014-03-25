@@ -5,8 +5,19 @@
     <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
   </head>
   <body>
-    <h1>Custom receiver example</h1>
-    <script src="../cast-away.js"></script>
+    <div id="start-panel">
+      <h1>Custom receiver example</h1>
+      <div><button id="cast">Start Cast</button></div>
+    </div>
+    <div id="message-panel" style="display: none">
+      <h2>Send a Message to the TV!</h2>
+      <div>
+        <input id="message" />
+        <button id="send-message">Send Message</button>
+      </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
+    <script src="cast-away.js"></script>
     <script src="init.js"></script>
   </body>
 </html>
