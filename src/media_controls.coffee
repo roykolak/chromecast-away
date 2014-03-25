@@ -1,9 +1,9 @@
 class MediaControls
-  constructor: (@session) ->
+  constructor: (@session, @castAway) ->
     throw "No session passed" unless @session
-    throw "chrome.cast namespace not found" unless chrome.cast
+    throw "CastAway instance not found" unless @castAway.cast
 
-    @cast = chrome.cast
+    @cast = @castAway.cast
 
   play: (cb=->) ->
     @session.play null,

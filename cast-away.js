@@ -20,10 +20,10 @@
     function CastAway(_arg) {
       var _ref;
       _ref = _arg != null ? _arg : {}, this.applicationID = _ref.applicationID, this.namespace = _ref.namespace;
-      if (!chrome.cast) {
+      if (!((typeof chrome !== "undefined" && chrome !== null ? chrome.cast : void 0) || cast)) {
         throw "chrome.cast namespace not found";
       }
-      this.cast = chrome.cast;
+      this.cast = (typeof chrome !== "undefined" && chrome !== null ? chrome.cast : void 0) || cast;
     }
 
     CastAway.prototype.initialize = function(cb) {
@@ -66,7 +66,7 @@
     CastAway.prototype.sessionListener = function(session) {
       if (session.media.length !== 0) {
         this.currentSession = session;
-        this.emit('existingMediaFound', new Session(this.currentSession), new MediaControls(this.currentSession.media[0]));
+        this.emit('existingMediaFound', new Session(this.currentSession, this), new MediaControls(this.currentSession.media[0], this));
         return session.addUpdateListener(this.sessionUpdateListener);
       }
     };
@@ -86,9 +86,11 @@
 
     CastAway.prototype.requestSession = function(cb) {
       var onError, onSuccess;
-      onSuccess = function(session) {
-        return cb(null, new Session(session));
-      };
+      onSuccess = (function(_this) {
+        return function(session) {
+          return cb(null, new Session(session, _this));
+        };
+      })(this);
       onError = function(err) {
         return cb(err);
       };
@@ -132,7 +134,7 @@
     CustomReceiver.prototype.start = function() {
       var bus, manager;
       manager = cast.receiver.CastReceiverManager.getInstance();
-      bus = this.manager.getCastMessageBus(this.namespace);
+      bus = manager.getCastMessageBus(this.namespace);
       bus.onMessage = this.onMessage;
       return manager.start(this.config);
     };
@@ -632,15 +634,16 @@
   var MediaControls;
 
   MediaControls = (function() {
-    function MediaControls(session) {
+    function MediaControls(session, castAway) {
       this.session = session;
+      this.castAway = castAway;
       if (!this.session) {
         throw "No session passed";
       }
-      if (!chrome.cast) {
-        throw "chrome.cast namespace not found";
+      if (!this.castAway.cast) {
+        throw "CastAway instance not found";
       }
-      this.cast = chrome.cast;
+      this.cast = this.castAway.cast;
     }
 
     MediaControls.prototype.play = function(cb) {
@@ -714,10 +717,10 @@
     function Session(session, castAway) {
       this.session = session;
       this.castAway = castAway;
-      if (!chrome.cast) {
-        throw "chrome.cast namespace not found";
+      if (!this.castAway.cast) {
+        throw "CastAway instance not found";
       }
-      this.cast = chrome.cast;
+      this.cast = this.castAway.cast;
       this.namespace = this.castAway.namespace || "urn:x-cast:json";
     }
 
@@ -747,14 +750,14 @@
       if (cb == null) {
         cb = function() {};
       }
-      request = new this.cast.media.LoadRequest(mediaInfo);
+      request = new chrome.cast.media.LoadRequest(mediaInfo);
       onSuccess = (function(_this) {
         return function(media) {
           var controls;
           media.addUpdateListener(function() {
             return _this.sessionUpdateListener();
           });
-          controls = new MediaControls(media);
+          controls = new MediaControls(media, _this.castAway);
           return cb(null, controls);
         };
       })(this);
@@ -802,7 +805,7 @@
       if (!config.contentType) {
         throw "Content-type required for music";
       }
-      mediaInfo = new this.cast.media.MediaInfo(config.url, config.contentType);
+      mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType);
       metadata = new chrome.cast.media.MusicTrackMediaMetadata();
       metadata.metadataType = chrome.cast.media.MetadataType.MUSIC_TRACK;
       mediaInfo.metadata = assignMetadata(metadata, config);
@@ -823,7 +826,7 @@
       if (!config.contentType) {
         throw "Content-type required for tv show";
       }
-      mediaInfo = new this.cast.media.MediaInfo(config.url, config.contentType);
+      mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType);
       metadata = new chrome.cast.media.TvShowMediaMetadata();
       metadata.metadataType = chrome.cast.media.MetadataType.TV_SHOW;
       mediaInfo.metadata = assignMetadata(metadata, config);
@@ -844,7 +847,7 @@
       if (!config.contentType) {
         throw "Content-type required for movie";
       }
-      mediaInfo = new this.cast.media.MediaInfo(config.url, config.contentType);
+      mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType);
       metadata = new chrome.cast.media.MovieMediaMetadata();
       metadata.metadataType = chrome.cast.media.MetadataType.MOVIE;
       mediaInfo.metadata = assignMetadata(metadata, config);
@@ -865,7 +868,7 @@
       if (!config.contentType) {
         throw "Content-type required for photo";
       }
-      mediaInfo = new this.cast.media.MediaInfo(config.url, config.contentType);
+      mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType);
       metadata = new chrome.cast.media.PhotoMediaMetadata();
       metadata.metadataType = chrome.cast.media.MetadataType.PHOTO;
       mediaInfo.metadata = assignMetadata(metadata, config);
@@ -891,22 +894,6 @@
   })(EventEmitter);
 
   assignMetadata = function(metadata, config) {
-    var image, key, value;
-    for (key in config) {
-      value = config[key];
-      if (key === 'images') {
-        value = (function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = value.length; _i < _len; _i++) {
-            image = value[_i];
-            _results.push(new chrome.cast.Image(image));
-          }
-          return _results;
-        })();
-      }
-      metadata[key] = value;
-    }
     return metadata;
   };
 

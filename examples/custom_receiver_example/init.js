@@ -11,32 +11,26 @@
     console.log("receivers available");
     return $("#cast").click(function(ev) {
       ev.preventDefault();
-      console.log("requesting session");
-      return castAway.requestSession({
-        success: function(session) {
-          console.log("Got session", session);
-          window.session = session;
-          $("#start-panel").hide();
-          $("#message-panel").show();
-          return $("#send-message").click(function(e) {
-            var val;
-            val = $("#message").val();
-            console.log("Sending " + val);
-            $("#message").val("");
-            return session.send("displayMessage", {
-              message: val
-            }, function(err, data) {
-              if (err) {
-                return console.log("error", err);
-              } else {
-                return console.log("success", data);
-              }
-            });
-          });
-        },
-        error: function() {
-          return console.log("Error", arguments);
+      return castAway.requestSession(function(err, session) {
+        if (err) {
+          return console.log("Error getting session", err);
         }
+        window.session = session;
+        $("#start-panel").hide();
+        $("#message-panel").show();
+        return $("#send-message").click(function(e) {
+          var val;
+          val = $("#message").val();
+          console.log("Sending " + val);
+          $("#message").val("");
+          return session.send("displayMessage", {
+            message: val
+          }, function(err, data) {
+            if (err) {
+              return console.log("error", err);
+            }
+          });
+        });
       });
     });
   });

@@ -12,7 +12,7 @@ module.exports = class CustomReceiver extends EventEmitter
 
   start: ->
     manager = cast.receiver.CastReceiverManager.getInstance()
-    bus = @manager.getCastMessageBus(@namespace)
+    bus = manager.getCastMessageBus(@namespace)
     bus.onMessage = @onMessage
     manager.start @config
 

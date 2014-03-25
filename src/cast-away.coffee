@@ -5,8 +5,8 @@ CustomReceiver = require('./custom-receiver')
 
 class CastAway extends EventEmitter
   constructor: ({@applicationID, @namespace} = {}) ->
-    throw "chrome.cast namespace not found" unless chrome.cast
-    @cast = chrome.cast
+    throw "chrome.cast namespace not found" unless chrome?.cast || cast
+    @cast = chrome?.cast || cast
 
   initialize: (cb) ->
     window['__onGCastApiAvailable'] = (loaded, errorInfo) =>
@@ -32,8 +32,8 @@ class CastAway extends EventEmitter
     if session.media.length != 0
       @currentSession = session
       @emit 'existingMediaFound',
-        new Session(@currentSession),
-        new MediaControls(@currentSession.media[0])
+        new Session(@currentSession, this),
+        new MediaControls(@currentSession.media[0], this)
       session.addUpdateListener(@sessionUpdateListener)
 
   receiverListener: (receiver) ->
@@ -46,7 +46,7 @@ class CastAway extends EventEmitter
       @currentSession = null
 
   requestSession: (cb) ->
-    onSuccess = (session) -> cb null, new Session(session)
+    onSuccess = (session) => cb null, new Session(session, this)
     onError = (err) -> cb(err)
     @cast.requestSession onSuccess, onError
 
