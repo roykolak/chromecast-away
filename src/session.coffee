@@ -90,9 +90,9 @@ class Session extends EventEmitter
     )
 
 assignMetadata = (metadata, config) ->
-  # for key, value of config
-  #   value = (new chrome.cast.media.Image(image) for image in value) if key == 'images'
-  #   metadata[key] = value
+  for key, value of config
+    value = (new chrome.cast.Image(image) for image in value) if key == 'images'
+    metadata[key] = value
   metadata
 
 module.exports = Session

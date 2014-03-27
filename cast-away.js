@@ -894,6 +894,22 @@
   })(EventEmitter);
 
   assignMetadata = function(metadata, config) {
+    var image, key, value;
+    for (key in config) {
+      value = config[key];
+      if (key === 'images') {
+        value = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = value.length; _i < _len; _i++) {
+            image = value[_i];
+            _results.push(new chrome.cast.Image(image));
+          }
+          return _results;
+        })();
+      }
+      metadata[key] = value;
+    }
     return metadata;
   };
 
