@@ -1,0 +1,21 @@
+/* This file should be servered from a https location */
+
+.background {
+  background-color: blue;
+}
+
+.logo {
+  background-image: url(https://s3.amazonaws.com/roysfunfun/stylized_media_receiver/logo.png);
+}
+
+.progressBar {
+  background-color: red;
+}
+
+.splash {
+  background-image: url(https://s3.amazonaws.com/roysfunfun/stylized_media_receiver/splash.jpg);
+}
+
+.watermark {
+  background-image: url(https://s3.amazonaws.com/roysfunfun/stylized_media_receiver/watermark.png);
+}
