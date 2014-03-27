@@ -1,0 +1,41 @@
+body {
+  background: #eee;
+  font-family: helvetica;
+  font-size: 13px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Open Sans',arial,sans-serif;
+  font-weight: 300;
+}
+h1 {
+  text-align: center;
+  font-size: 50px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 20px;
+}
+h1 a, h2 a, h3 a, h4 a {
+  text-decoration: none;
+}
+a {
+  color: #0000EE;
+}
+section {
+  border-bottom: 1px solid #EEE;
+  padding-bottom: 10px;
+}
+section:last-child {
+  border-bottom: none;
+}
+.content {
+  position: relative;
+  background: #fff;
+  padding: 40px;
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  width: 500px;
+  margin: auto;
+}
+

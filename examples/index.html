@@ -2,20 +2,31 @@
 <html>
   <head>
     <title>Examples</title>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="example.css">
   </head>
   <body>
-    <h1>Examples</h1>
-    <ul>
-      <li>
-        <a href="/default_media_receiver">Default Media Receiver</a>
-      </li>
-      <li>
-        <a href="/stylized_media_receiver">Stylized Media Receiver</a>
-      </li>
-      <li>
-        <a href="/custom_receiver">Custom Receiver</a>
-      </li>
-    </ul>
+    <h1>Receiver examples</h1>
+    <div class="content">
+      <section>
+        <h3>
+          <a href="/default_receiver">Default Receiver</a>
+        </h3>
+        <p>Play audio, video, and photos using the chromecast's default receiver. You do not need to register an app id for this receiver.</p>
+      </section>
+      <section>
+        <h3>
+          <a href="/stylized_media_receiver">Stylized Media Receiver</a>
+        </h3>
+        <p>Play audio, video, and photos using the chromecast's default media receiver but provide a link to a stylesheet to decorate it. You do need to register an app id for this receiver and the stylesheet needs to be loaded from a https connection.</p>
+      </section>
+      <section>
+        <h3>
+          <a href="/custom_receiver">Custom Receiver</a>
+        </h3>
+        <p>Load a url containing HTML, CSS, and JS onto your chromecast and communicate with it via message passing. You do need to register an app id for this receiver and provide a namespace for the messages.</p>
+      </section>
+    </div>
   </body>
 </html>
 
