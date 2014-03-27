@@ -1,4 +1,4 @@
-
+CastAway
 =====================
 
 A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.
@@ -33,37 +33,35 @@ castAway = new CastAway()
 castAway.on 'receivers:available', ->
   # receivers available, safe to request a session
 
-  castAway.requestSession
-    success: (session) ->
-      config =
-        url: 'https://s3.amazonaws.com/...mp3'
-        contentType: 'audio/mpeg'
-        artist: 'Will Smith'
-        images: ["http://www.willy-smith.com/men-in-black....jpg"]
+  castAway.requestSession (err, session) ->
+    if err
+      return # error starting session (user canceled it)
 
-      # Also available: '.photo', '.movie', '.tvShow' ... see examples
-      session.music config,
-        success: (controls) ->
-          # Interact with the media via controls
-          $('.pause').click (ev) -> controls.pause()
-          $('.play').click (ev) -> controls.play()
-          $('.stop').click (ev) -> controls.stop()
-          $('.release').click (ev) -> session.release()
+    config =
+      url: 'https://s3.amazonaws.com/...mp3'
+      contentType: 'audio/mpeg'
+      artist: 'Will Smith'
+      images: ["http://www.willy-smith.com/men-in-black....jpg"]
 
-          # will emit the following events...
-          session.on 'pause', -> # media paused
-          session.on 'play', -> # media playing
-          session.on 'stop', -> # media stopped
-          session.on 'seek', -> # media seeking
-          session.on 'error', -> # media errored
-          session.on 'idle', -> # media idle
-          session.on 'load', -> # media loading
+    # Also available: '.photo', '.movie', '.tvShow' ... see examples
+    session.music config, (err, controls) ->
+      if err
+        return # error loading media
 
-        error: (data) ->
-          # Error loading media
+      # Interact with the media via controls
+      $('.pause').click (ev) -> controls.pause()
+      $('.play').click (ev) -> controls.play()
+      $('.stop').click (ev) -> controls.stop()
+      $('.release').click (ev) -> session.release()
 
-    error: ->
-      # error starting session (user canceled it)
+      # will emit the following events...
+      session.on 'pause', -> # media paused
+      session.on 'play', -> # media playing
+      session.on 'stop', -> # media stopped
+      session.on 'seek', -> # media seeking
+      session.on 'error', -> # media errored
+      session.on 'idle', -> # media idle
+      session.on 'load', -> # media loading
 
 castAway.on 'receivers:unavailable', ->
   # No receivers found
@@ -72,11 +70,11 @@ castAway.on 'existingMediaFound', (session, controls) ->
   # found existing media session, interact with it via
   # the passed session and controls.
 
-castAway.initialize
-  success: (data) ->
-    # successfully initialized, party
-  error: (data) ->
+castAway.initialize (err, data) ->
+  if err
     # unsuccessfully initialized, cry
+  else
+    # successfully initialized, party
 ```
 
 Playing via custom media receiver
@@ -93,6 +91,44 @@ Displaying HTML via custom receiver
 
 Want send HTML/CSS/JS to a chromecast and do everything yourself to impress your friends and win influence?
 
+### Receiver Code
+
+```html
+<h1>Put Messages on Your TV!</h1>
+<ul id="messages"></ul>
+```
+
 ```coffee
-  # Coming soon!
+castAway = new CastAway()
+receiver = castAway.receive()
+
+receiver.on "displayMessage", (data) ->
+  $("#messages").append "<li>" + data.message + "</li>"
+```
+
+### Sender Code
+
+```html
+<h1>Put Messages on Your TV!</h1>
+<input id="message" type="text" /><button id="send-message">Send</button>
+```
+
+```coffee
+castAway = new CastAway applicationID: "XXXXXXXXX"
+
+castAway.on "receivers:available", ->
+  castAway.requestSession (err, session) ->
+    $("#send-message").click ->
+      val = $("#message").val()
+      session.send "displayMessage", message: val, (err, data) ->
+        if err
+          console.log "error", err
+        else
+          console.log "success", data
+
+castAway.initialize (err, data) ->
+  if err
+    console.log "error initializing", err
+  else
+    console.log "initialized", data
 ```

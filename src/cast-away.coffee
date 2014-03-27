@@ -1,13 +1,14 @@
 EventEmitter = require('./event_emitter')
 Session = require('./session')
 MediaControls = require('./media_controls')
+CustomReceiver = require('./custom-receiver')
 
 class CastAway extends EventEmitter
   constructor: ({@applicationID, @namespace} = {}) ->
-    throw "chrome.cast namespace not found" unless chrome.cast
-    @cast = chrome.cast
+    throw "chrome.cast namespace not found" unless chrome?.cast || cast
+    @cast = chrome?.cast || cast
 
-  initialize: (@callbacks) ->
+  initialize: (cb) ->
     window['__onGCastApiAvailable'] = (loaded, errorInfo) =>
       if loaded
         app = @applicationID || @cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
@@ -17,17 +18,22 @@ class CastAway extends EventEmitter
           (data...) => @sessionListener(data...),
           (data...) => @receiverListener(data...)
 
-        success = (args...) => callbacks.success?(args...)
-        error = (args...) => callbacks.error?(args...)
+        success = (data) -> cb(null, data)
+        error = (err) -> cb(err)
 
         @cast.initialize(apiConfig, success, error)
+
+  receive: (config={}) ->
+    @receiver = new CustomReceiver(config, this)
+    @receiver.start()
+    @receiver
 
   sessionListener: (session) ->
     if session.media.length != 0
       @currentSession = session
       @emit 'existingMediaFound',
-        new Session(@currentSession),
-        new MediaControls(@currentSession.media[0])
+        new Session(@currentSession, this),
+        new MediaControls(@currentSession.media[0], this)
       session.addUpdateListener(@sessionUpdateListener)
 
   receiverListener: (receiver) ->
@@ -39,9 +45,9 @@ class CastAway extends EventEmitter
     unless isAlive
       @currentSession = null
 
-  requestSession: (callbacks) ->
-    @cast.requestSession \
-      (session) -> callbacks.success?(new Session(session)),
-      (args...) -> callbacks.error?([args...])
+  requestSession: (cb) ->
+    onSuccess = (session) => cb null, new Session(session, this)
+    onError = (err) -> cb(err)
+    @cast.requestSession onSuccess, onError
 
 window.CastAway = CastAway
