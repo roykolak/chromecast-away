@@ -7,6 +7,11 @@
     <meta name="description" content="Chromecast-away : A friendly wrapper for the Chromecast, no relation to Tom Hanks" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/tomorrow-night-eighties.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
+    <script src="javascripts/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
     <title>Chromecast-away</title>
     <style>
@@ -79,13 +84,187 @@
 
 <p><em>Still in heavy development.</em></p>
 
-<p>Supports:</p>
 
-<ul>
-<li>Playing via default media receiver</li>
-<li>Playing via custom media receiver (Coming Soon)</li>
-<li>Displaying HTML via custom receiver (Coming Soon)</li>
-</ul><p>Important Notes:</p>
+<a href="#default_receiver" class="tab selected">Default receiver</a>
+<a href="#stylized_media_receiver" class="tab">Stylized media receiver</a>
+<a href="#custom_receiver" class="tab">Custom receiver</a>
+<script>
+  $('.tab').click(function(ev) {
+    ev.preventDefault();
+    var $el = $(ev.currentTarget);
+    $('.tab_content').removeClass('active');
+    $('.tab').removeClass('selected');
+    $($el.attr('href')).addClass('active');
+    $el.addClass('selected');
+  });
+</script>
+
+<div id="default_receiver" class="tab_content active">
+  <p>Want to just play media (music, video, photos) right now with some baked in support for displaying basic metadata about the content?</p>
+  <pre>
+    <code>
+      castAway = new CastAway()
+
+      castAway.on 'receivers:available', ->
+        # receivers available, safe to request a session
+
+        castAway.requestSession (err, session) ->
+          if err
+            return # error starting session (user canceled it)
+
+          config =
+            url: 'https://s3.amazonaws.com/...mp3'
+            contentType: 'audio/mpeg'
+            artist: 'Will Smith'
+            images: ["http://www.willy-smith.com/men-in-black....jpg"]
+
+          # Also available: '.photo', '.movie', '.tvShow' ... see examples
+          session.music config, (err, controls) ->
+            if err
+              return # error loading media
+
+            # Interact with the media via controls
+            $('.pause').click (ev) -> controls.pause()
+            $('.play').click (ev) -> controls.play()
+            $('.stop').click (ev) -> controls.stop()
+            $('.release').click (ev) -> session.release()
+
+            # will emit the following events...
+            session.on 'pause', -> # media paused
+            session.on 'play', -> # media playing
+            session.on 'stop', -> # media stopped
+            session.on 'seek', -> # media seeking
+            session.on 'error', -> # media errored
+            session.on 'idle', -> # media idle
+            session.on 'load', -> # media loading
+            session.on 'release', -> # quit cast session
+
+      castAway.on 'receivers:unavailable', ->
+        # No receivers found
+
+      castAway.on 'existingMediaFound', (session, controls) ->
+        # found existing media session, interact with it via
+        # the passed session and controls.
+
+      castAway.initialize (err, data) ->
+        if err
+          # unsuccessfully initialized, cry
+        else
+          # successfully initialized, party
+
+    </code>
+  </pre>
+</div>
+
+<div id="stylized_media_receiver" class="tab_content">
+  <p>Want all the baked in goodness of the default media receiver, but your own custom look via CSS?</p>
+  <pre>
+    <code>
+      # Note the application id
+      castAway = new CastAway applicationID: "XXXXXXXXX"
+
+      castAway.on 'receivers:available', ->
+        # receivers available, safe to request a session
+
+        castAway.requestSession (err, session) ->
+          if err
+            return # error starting session (user canceled it)
+
+          config =
+            url: 'https://s3.amazonaws.com/...mp3'
+            contentType: 'audio/mpeg'
+            artist: 'Will Smith'
+            images: ["http://www.willy-smith.com/men-in-black....jpg"]
+
+          # Also available: '.photo', '.movie', '.tvShow' ... see examples
+          session.music config, (err, controls) ->
+            if err
+              return # error loading media
+
+            # Interact with the media via controls
+            $('.pause').click (ev) -> controls.pause()
+            $('.play').click (ev) -> controls.play()
+            $('.stop').click (ev) -> controls.stop()
+            $('.release').click (ev) -> session.release()
+
+            # will emit the following events...
+            session.on 'pause', -> # media paused
+            session.on 'play', -> # media playing
+            session.on 'stop', -> # media stopped
+            session.on 'seek', -> # media seeking
+            session.on 'error', -> # media errored
+            session.on 'idle', -> # media idle
+            session.on 'load', -> # media loading
+            session.on 'release', -> # quit cast session
+
+      castAway.on 'receivers:unavailable', ->
+        # No receivers found
+
+      castAway.on 'existingMediaFound', (session, controls) ->
+        # found existing media session, interact with it via
+        # the passed session and controls.
+
+      castAway.initialize (err, data) ->
+        if err
+          # unsuccessfully initialized, cry
+        else
+          # successfully initialized, party
+
+
+    </code>
+  </pre>
+</div>
+
+<div id="custom_receiver" class="tab_content">
+  <p>Want send HTML/CSS/JS to a chromecast and do everything yourself to impress your friends and win influence?</p>
+  <h4>Receiver Code</h4>
+  <pre>
+    <code>
+      <h1>Put Messages on Your TV!</h1>
+      <ul id="messages"></ul>
+    </code>
+  </pre>
+  <pre>
+    <code>
+      castAway = new CastAway()
+      receiver = castAway.receive()
+
+      receiver.on "displayMessage", (data) ->
+        $("#messages").append "<li>" + data.message + "</li>"
+    </code>
+  </pre>
+  <h4>Sender Code</h4>
+  <pre>
+    <code>
+      <h1>Put Messages on Your TV!</h1>
+      <input id="message" type="text" /><button id="send-message">Send</button>
+    </code>
+  </pre>
+  <pre>
+    <code>
+      castAway = new CastAway applicationID: "XXXXXXXXX"
+
+      castAway.on "receivers:available", ->
+        castAway.requestSession (err, session) ->
+          $("#send-message").click ->
+            val = $("#message").val()
+            session.send "displayMessage", message: val, (err, data) ->
+              if err
+                console.log "error", err
+              else
+                console.log "success", data
+
+      castAway.initialize (err, data) ->
+        if err
+          console.log "error initializing", err
+        else
+          console.log "initialized", data
+     </code>
+  </pre>
+</div>
+
+</div>
+<p>Important Notes:</p>
 
 <ul>
 <li>Register your chromecast's ID number <a href="https://developers.google.com/cast/docs/registration#RegisterDevice">with Google</a>
@@ -95,77 +274,7 @@
 <li>The <a href="https://chrome.google.com/webstore/detail/google-cast/boadgeojelhgndaghljhdicfkmllpafd?hl=en">Chromecast extension</a> is required as it will pop open when users try to cast.</li>
 <li>Here's all the <a href="https://developers.google.com/cast/docs/developers">official docs</a>
 </li>
-</ul><h2>
-<a name="playing-via-default-media-receiver" class="anchor" href="#playing-via-default-media-receiver"><span class="octicon octicon-link"></span></a>Playing via default media receiver</h2>
-
-<p>Want to just play media (music, video, photos) right now with some baked in support for displaying basic metadata about the content?</p>
-
-<div class="highlight highlight-coffee"><pre><span class="nv">castAway = </span><span class="k">new</span> <span class="nx">CastAway</span><span class="p">()</span>
-
-<span class="nx">castAway</span><span class="p">.</span><span class="nx">on</span> <span class="s">'receivers:available'</span><span class="p">,</span> <span class="nf">-&gt;</span>
-  <span class="c1"># receivers available, safe to request a session</span>
-
-  <span class="nx">castAway</span><span class="p">.</span><span class="nx">requestSession</span>
-    <span class="nv">success: </span><span class="nf">(session) -&gt;</span>
-      <span class="nv">config =</span>
-        <span class="nv">url: </span><span class="s">'https://s3.amazonaws.com/...mp3'</span>
-        <span class="nv">contentType: </span><span class="s">'audio/mpeg'</span>
-        <span class="nv">artist: </span><span class="s">'Will Smith'</span>
-        <span class="nv">images: </span><span class="p">[</span><span class="s">"http://www.willy-smith.com/men-in-black....jpg"</span><span class="p">]</span>
-
-      <span class="c1"># Also available: '.photo', '.movie', '.tvShow' ... see examples</span>
-      <span class="nx">session</span><span class="p">.</span><span class="nx">music</span> <span class="nx">config</span><span class="p">,</span>
-        <span class="nv">success: </span><span class="nf">(controls) -&gt;</span>
-          <span class="c1"># Interact with the media via controls</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s">'.pause'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">controls</span><span class="p">.</span><span class="nx">pause</span><span class="p">()</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s">'.play'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">controls</span><span class="p">.</span><span class="nx">play</span><span class="p">()</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s">'.stop'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">controls</span><span class="p">.</span><span class="nx">stop</span><span class="p">()</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s">'.release'</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(ev) -&gt;</span> <span class="nx">session</span><span class="p">.</span><span class="nx">release</span><span class="p">()</span>
-
-          <span class="c1"># will emit the following events...</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'pause'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media paused</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'play'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media playing</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'stop'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media stopped</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'seek'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media seeking</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'error'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media errored</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'idle'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media idle</span>
-          <span class="nx">session</span><span class="p">.</span><span class="nx">on</span> <span class="s">'load'</span><span class="p">,</span> <span class="nf">-&gt;</span> <span class="c1"># media loading</span>
-
-        <span class="nv">error: </span><span class="nf">(data) -&gt;</span>
-          <span class="c1"># Error loading media</span>
-
-    <span class="nv">error: </span><span class="nf">-&gt;</span>
-      <span class="c1"># error starting session (user canceled it)</span>
-
-<span class="nx">castAway</span><span class="p">.</span><span class="nx">on</span> <span class="s">'receivers:unavailable'</span><span class="p">,</span> <span class="nf">-&gt;</span>
-  <span class="c1"># No receivers found</span>
-
-<span class="nx">castAway</span><span class="p">.</span><span class="nx">on</span> <span class="s">'existingMediaFound'</span><span class="p">,</span> <span class="nf">(session, controls) -&gt;</span>
-  <span class="c1"># found existing media session, interact with it via</span>
-  <span class="c1"># the passed session and controls.</span>
-
-<span class="nx">castAway</span><span class="p">.</span><span class="nx">initialize</span>
-  <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
-    <span class="c1"># successfully initialized, party</span>
-  <span class="nv">error: </span><span class="nf">(data) -&gt;</span>
-    <span class="c1"># unsuccessfully initialized, cry</span>
-</pre></div>
-
-<h2>
-<a name="playing-via-custom-media-receiver" class="anchor" href="#playing-via-custom-media-receiver"><span class="octicon octicon-link"></span></a>Playing via custom media receiver</h2>
-
-<p>Want all the baked in goodness of the default media receiver, but your own custom look via CSS?</p>
-
-<div class="highlight highlight-js"><pre>  <span class="err">#</span> <span class="nx">Coming</span> <span class="nx">soon</span>
-</pre></div>
-
-<h2>
-<a name="displaying-html-via-custom-receiver" class="anchor" href="#displaying-html-via-custom-receiver"><span class="octicon octicon-link"></span></a>Displaying HTML via custom receiver</h2>
-
-<p>Want send HTML/CSS/JS to a chromecast and do everything yourself to impress your friends and win influence?</p>
-
-<div class="highlight highlight-coffee"><pre>  <span class="c1"># Coming soon!</span>
-</pre></div>
+</ul>
       </section>
     </div>
 

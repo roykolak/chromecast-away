@@ -160,8 +160,6 @@ p img {
 pre, code {
   width: 100%;
   color: #222;
-  background-color: #fff;
-
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 14px;
 
@@ -172,14 +170,9 @@ pre, code {
 
 pre {
   width: 100%;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
-  overflow: auto;
 }
 
 code {
-  padding: 3px;
-  margin: 0 3px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
 }
 
@@ -420,4 +413,22 @@ Small Device Styles
     font-size: 11px;
   }
 
+}
+a.tab {
+  font-size: 25px;
+  margin: 10px;
+  padding: 10px;
+  text-decoration: none;
+}
+a.tab.selected {
+  color: #FFF;
+  background: #007edf;
+  border-radius: 10px;
+}
+.tab_content {
+  display: none;
+  margin-top: 40px;
+}
+.tab_content.active {
+  display: block;
 }
