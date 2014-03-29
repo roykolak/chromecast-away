@@ -1,6 +1,6 @@
 EventEmitter = require('./event_emitter')
 Session = require('./session')
-MediaControls = require('./media_controls')
+MediaControls = require('./media-controls')
 CustomReceiver = require('./custom-receiver')
 
 class CastAway extends EventEmitter

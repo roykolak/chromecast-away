@@ -1,5 +1,5 @@
 EventEmitter = require('./event_emitter')
-MediaControls = require('./media_controls')
+MediaControls = require('./media-controls')
 
 class Session extends EventEmitter
   constructor: (@session, @castAway) ->
