@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Castaway Demo</title>
+    <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
+    <script src="cast-away.js"></script>
+    <style>
+      body {
+        background: white;
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      window.onload = function() {
+        var castAway = new CastAway(),
+            receiver = castAway.receive();
+
+        receiver.on("displayMessage", function(data) {
+          $("#messages").append("<li>" + data.message + "</li>");
+        });
+      }
+    </script>
+    <h1>Welcome to Castaway!</h1>
+    <ul id="messages"></ul>
+  </body>
+</html>

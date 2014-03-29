@@ -2,18 +2,29 @@ EventEmitter = require('./event_emitter')
 MediaControls = require('./media_controls')
 
 class Session extends EventEmitter
-  constructor: (@session) ->
-    throw "chrome.cast namespace not found" unless chrome.cast
-    @cast = chrome.cast
+  constructor: (@session, @castAway) ->
+    throw "CastAway instance not found" unless @castAway.cast
+    @cast = @castAway.cast
+    @namespace = @castAway.namespace || "urn:x-cast:json"
 
-  load: (mediaInfo, success, error) ->
-    request = new @cast.media.LoadRequest(mediaInfo)
+  send: (name, payload={}, cb=->) ->
+    onSuccess = (data) -> cb(null, data)
+    onError = (err) -> cb err
+    data = JSON.stringify(_name: name, _payload: payload)
+    @session.sendMessage @namespace, data, onSuccess, onError
 
-    @session.loadMedia request, (media) =>
+  load: (mediaInfo, cb=->) ->
+    request = new chrome.cast.media.LoadRequest(mediaInfo)
+
+    onSuccess = (media) =>
       media.addUpdateListener => @sessionUpdateListener()
-      success(media)
-    , (args...) ->
-      error(args...)
+      controls = new MediaControls(media, @castAway)
+      cb(null, controls)
+
+    onError = (err) ->
+      cb(err)
+
+    @session.loadMedia request, onSuccess, onError
 
   sessionUpdateListener: ->
     media = @session.media[0]
@@ -27,67 +38,55 @@ class Session extends EventEmitter
       when 'LOADING' then 'load'
     @emit event
 
-  music: (config = {}, callbacks) ->
+  music: (config = {}, cb=->) ->
     throw "Url required for music" unless config.url
     throw "Content-type required for music" unless config.contentType
 
-    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType)
     metadata = new chrome.cast.media.MusicTrackMediaMetadata()
     metadata.metadataType = chrome.cast.media.MetadataType.MUSIC_TRACK
     mediaInfo.metadata = assignMetadata(metadata, config)
 
-    @load mediaInfo, (media) =>
-      callbacks.success?(new MediaControls(media))
-    , (args...) ->
-      callbacks.error?(args...)
+    @load mediaInfo, cb
 
-  tvShow: (config = {}, callbacks) ->
+  tvShow: (config = {}, cb=->) ->
     throw "Url required for tv show" unless config.url
     throw "Content-type required for tv show" unless config.contentType
 
-    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType)
     metadata = new chrome.cast.media.TvShowMediaMetadata()
     metadata.metadataType = chrome.cast.media.MetadataType.TV_SHOW
     mediaInfo.metadata = assignMetadata(metadata, config)
 
-    @load mediaInfo, (media) =>
-      callbacks.success?(new MediaControls(media))
-    , (args...) ->
-      callbacks.error?(args...)
+    @load mediaInfo, cb
 
-  movie: (config = {}, callbacks) ->
+  movie: (config = {}, cb=->) ->
     throw "Url required for movie" unless config.url
     throw "Content-type required for movie" unless config.contentType
 
-    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType)
     metadata = new chrome.cast.media.MovieMediaMetadata()
     metadata.metadataType = chrome.cast.media.MetadataType.MOVIE
     mediaInfo.metadata = assignMetadata(metadata, config)
 
-    @load mediaInfo, (media) =>
-      callbacks.success?(new MediaControls(media))
-    , (args...) ->
-      callbacks.error?(args...)
+    @load mediaInfo, cb
 
-  photo: (config = {}, callbacks) ->
+  photo: (config = {}, cb=->) ->
     throw "Url required for photo" unless config.url
     throw "Content-type required for photo" unless config.contentType
 
-    mediaInfo = new @cast.media.MediaInfo(config.url, config.contentType)
+    mediaInfo = new chrome.cast.media.MediaInfo(config.url, config.contentType)
     metadata = new chrome.cast.media.PhotoMediaMetadata()
     metadata.metadataType = chrome.cast.media.MetadataType.PHOTO
     mediaInfo.metadata = assignMetadata(metadata, config)
 
-    @load mediaInfo, (media) =>
-      callbacks.success?(new MediaControls(media))
-    , (args...) ->
-      callbacks.error?(args...)
+    @load mediaInfo, cb
 
-  release: (success, error) ->
+  release: (cb=->) ->
     return unless @session
     @session.stop(
-      ((args...) -> success?(args...)),
-      ((args...) -> error?(args...))
+      ((data) -> cb(null, data)),
+      ((err) -> cb(err))
     )
 
 assignMetadata = (metadata, config) ->

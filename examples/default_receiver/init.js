@@ -7,88 +7,72 @@
   castAway.on('receivers:available', function() {
     console.log('receivers available, safe to request a session');
     $('.music .cast').click(function(ev) {
-      return castAway.requestSession({
-        success: function(session) {
-          var config;
-          config = {
-            url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3',
-            contentType: 'audio/mpeg',
-            albumName: 'Album name',
-            albumArtist: 'Album artist',
-            artist: 'Music artist',
-            composer: 'Composer',
-            images: ["http://www.biography.com/imported/images/Biography/Images/Profiles/S/Will-Smith-9542165-1-402.jpg"]
-          };
-          return session.music(config, {
-            success: function(controls) {
-              return attachControls($('.music'), session, controls);
-            }
-          });
-        }
+      return castAway.requestSession(function(err, session) {
+        var config;
+        config = {
+          url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3',
+          contentType: 'audio/mpeg',
+          albumName: 'Album name',
+          albumArtist: 'Album artist',
+          artist: 'Music artist',
+          composer: 'Composer',
+          images: ["http://www.biography.com/imported/images/Biography/Images/Profiles/S/Will-Smith-9542165-1-402.jpg"]
+        };
+        return session.music(config, function(err, controls) {
+          return attachControls($('.music'), session, controls);
+        });
       });
     });
     $('.tv_show .cast').click(function(ev) {
-      return castAway.requestSession({
-        success: function(session) {
-          var config;
-          config = {
-            url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/ED_1280.mp4',
-            title: 'Elephant Dream',
-            seriesTitle: 'TV show name here',
-            images: ['http://img1.wikia.nocookie.net/__cb20130823094044/disney/images/a/a2/Will-smith-image3.jpg'],
-            contentType: 'video/mp4'
-          };
-          return session.tvShow(config, {
-            success: function(controls) {
-              return attachControls($('.tv_show'), session, controls);
-            }
-          });
-        }
+      return castAway.requestSession(function(err, session) {
+        var config;
+        config = {
+          url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/ED_1280.mp4',
+          title: 'Elephant Dream',
+          seriesTitle: 'TV show name here',
+          images: ['http://img1.wikia.nocookie.net/__cb20130823094044/disney/images/a/a2/Will-smith-image3.jpg'],
+          contentType: 'video/mp4'
+        };
+        return session.tvShow(config, function(err, controls) {
+          return attachControls($('.tv_show'), session, controls);
+        });
       });
     });
     $('.movie .cast').click(function(ev) {
-      return castAway.requestSession({
-        success: function(session) {
-          var config;
-          config = {
-            url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/tears_of_steel_1080p.mov',
-            title: 'Tears of Steel',
-            images: ['http://img1.wikia.nocookie.net/__cb20130823094044/disney/images/a/a2/Will-smith-image3.jpg'],
-            subtitle: 'subtitle',
-            studio: 'By Blender Foundation',
-            releaseYear: '2006',
-            contentType: 'video/mp4'
-          };
-          return session.movie(config, {
-            success: function(controls) {
-              return attachControls($('.movie'), session, controls);
-            }
-          });
-        }
+      return castAway.requestSession(function(err, session) {
+        var config;
+        config = {
+          url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/tears_of_steel_1080p.mov',
+          title: 'Tears of Steel',
+          images: ['http://img1.wikia.nocookie.net/__cb20130823094044/disney/images/a/a2/Will-smith-image3.jpg'],
+          subtitle: 'subtitle',
+          studio: 'By Blender Foundation',
+          releaseYear: '2006',
+          contentType: 'video/mp4'
+        };
+        return session.movie(config, function(err, controls) {
+          return attachControls($('.movie'), session, controls);
+        });
       });
     });
     return $('.photo .cast').click(function(ev) {
-      return castAway.requestSession({
-        success: function(session) {
-          var config;
-          config = {
-            url: 'http://www.videws.com/eureka/castv2/images/San_Francisco_Fog.jpg',
-            title: 'San Francisco Fog',
-            contentType: 'image/jpg',
-            artist: 'Photo artist',
-            location: 'San Francisco',
-            longitude: 37.7833,
-            latitude: 122.4167,
-            width: 1728,
-            height: 1152,
-            creationDateTime: '1999'
-          };
-          return session.photo(config, {
-            success: function(controls) {
-              return attachControls($('.photo'), session, controls);
-            }
-          });
-        }
+      return castAway.requestSession(function(err, session) {
+        var config;
+        config = {
+          url: 'http://www.videws.com/eureka/castv2/images/San_Francisco_Fog.jpg',
+          title: 'San Francisco Fog',
+          contentType: 'image/jpg',
+          artist: 'Photo artist',
+          location: 'San Francisco',
+          longitude: 37.7833,
+          latitude: 122.4167,
+          width: 1728,
+          height: 1152,
+          creationDateTime: '1999'
+        };
+        return session.photo(config, function(err, controls) {
+          return attachControls($('.photo'), session, controls);
+        });
       });
     });
   });
@@ -113,12 +97,11 @@
     });
   });
 
-  castAway.initialize({
-    success: function(data) {
-      return console.log('successfully initialized');
-    },
-    error: function(data) {
+  castAway.initialize(function(err, data) {
+    if (err) {
       return console.log('unsuccessfully initialized');
+    } else {
+      return console.log('successfully initialized');
     }
   });
 

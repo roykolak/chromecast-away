@@ -3,6 +3,7 @@ exec = require('child_process').exec
 
 exec('./node_modules/.bin/coffee -w -o lib/ -c src/')
 exec('./node_modules/.bin/coffee -w -o examples/default_receiver/ -c examples/default_receiver/')
+exec('./node_modules/.bin/coffee -w -o examples/custom_receiver_example/ -c examples/custom_receiver_example/')
 exec('./node_modules/.bin/http-server examples -p 8989')
 console.log "Running examples at localhost:8989"
 
