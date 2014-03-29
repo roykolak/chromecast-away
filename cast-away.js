@@ -66,8 +66,8 @@
     CastAway.prototype.sessionListener = function(session) {
       if (session.media.length !== 0) {
         this.currentSession = session;
-        this.emit('existingMediaFound', new Session(this.currentSession, this), new MediaControls(this.currentSession.media[0], this));
-        return session.addUpdateListener(this.sessionUpdateListener);
+        session.addUpdateListener(this.sessionUpdateListener);
+        return this.emit('existingMediaFound', new Session(this.currentSession, this), new MediaControls(this.currentSession.media[0], this));
       }
     };
 
@@ -722,7 +722,22 @@
       }
       this.cast = this.castAway.cast;
       this.namespace = this.castAway.namespace || "urn:x-cast:json";
+      if (this.session.media[0]) {
+        this.session.media[0].addUpdateListener((function(_this) {
+          return function() {
+            return _this.sessionUpdateListener();
+          };
+        })(this));
+      }
     }
+
+    Session.prototype.displayName = function() {
+      return this.session.displayName;
+    };
+
+    Session.prototype.receiverName = function() {
+      return this.session.receiver.friendlyName;
+    };
 
     Session.prototype.send = function(name, payload, cb) {
       var data, onError, onSuccess;
@@ -882,6 +897,7 @@
       if (!this.session) {
         return;
       }
+      this.emit('release');
       return this.session.stop((function(data) {
         return cb(null, data);
       }), (function(err) {

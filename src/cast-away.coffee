@@ -31,10 +31,10 @@ class CastAway extends EventEmitter
   sessionListener: (session) ->
     if session.media.length != 0
       @currentSession = session
+      session.addUpdateListener(@sessionUpdateListener)
       @emit 'existingMediaFound',
         new Session(@currentSession, this),
         new MediaControls(@currentSession.media[0], this)
-      session.addUpdateListener(@sessionUpdateListener)
 
   receiverListener: (receiver) ->
     available = @cast.ReceiverAvailability.AVAILABLE

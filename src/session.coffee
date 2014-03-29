@@ -7,6 +7,16 @@ class Session extends EventEmitter
     @cast = @castAway.cast
     @namespace = @castAway.namespace || "urn:x-cast:json"
 
+    # If a media session already exists, listen in...
+    if @session.media[0]
+      @session.media[0].addUpdateListener => @sessionUpdateListener()
+
+  displayName: ->
+    @session.displayName
+
+  receiverName: ->
+    @session.receiver.friendlyName
+
   send: (name, payload={}, cb=->) ->
     onSuccess = (data) -> cb(null, data)
     onError = (err) -> cb err
@@ -84,6 +94,7 @@ class Session extends EventEmitter
 
   release: (cb=->) ->
     return unless @session
+    @emit 'release'
     @session.stop(
       ((data) -> cb(null, data)),
       ((err) -> cb(err))
