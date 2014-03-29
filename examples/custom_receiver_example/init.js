@@ -3,7 +3,7 @@
   var castAway;
 
   castAway = window.castAway = new CastAway({
-    applicationID: "8D5CA342",
+    applicationID: "EC8A2707",
     namespace: "urn:x-cast:json"
   });
 

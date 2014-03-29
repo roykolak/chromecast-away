@@ -1,4 +1,6 @@
-castAway = window.castAway = new CastAway applicationID: "8D5CA342", namespace: "urn:x-cast:json"
+castAway = window.castAway = new CastAway
+  applicationID: "EC8A2707"
+  namespace: "urn:x-cast:json"
 
 castAway.on "receivers:available", ->
   console.log "receivers available"
