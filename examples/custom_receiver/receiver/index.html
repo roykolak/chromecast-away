@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Castaway Demo</title>
+    <title>Custom receiver</title>
     <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" type="text/css">
     <script src="cast-away.js"></script>
     <style>
       body {
         background: white;
-        color: blue;
+        color: #000;
+        text-align: center;
+        font-size: 40px;
+        font-family: helvetica;
+      }
+      ul {
+        margin-top: 50px;
+      }
+      li {
+        list-style-type: none;
+      }
+      h1 {
+        font-weight: 300;
+        font-family: 'Open Sans';
+        font-size: 100px;
+        border-bottom: 1px solid #CCC;
+        width: 800px;
+        margin: auto;
+      }
+      h1 span {
+        margin: 0 -12px;
       }
     </style>
   </head>
@@ -23,7 +44,15 @@
         });
       }
     </script>
-    <h1>Welcome to Castaway!</h1>
+    <h1>
+      <span style="color:#AF81C9">C</span>
+      <span style="color:#F89A7E">u</span>
+      <span style="color:#F2CA85">s</span>
+      <span style="color:#54D1F1">t</span>
+      <span style="color:#7C71AD">o</span>
+      <span style="color:#73D34A">m</span>
+      receiver
+    </h1>
     <ul id="messages"></ul>
   </body>
 </html>

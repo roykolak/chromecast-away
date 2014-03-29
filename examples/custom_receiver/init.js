@@ -35,6 +35,26 @@
     });
   });
 
+  castAway.on('existingMediaFound', function(session) {
+    debugger;
+    window.session = session;
+    $("#start-panel").hide();
+    $("#message-panel").show();
+    return $("#send-message").click(function(e) {
+      var val;
+      val = $("#message").val();
+      console.log("Sending " + val);
+      $("#message").val("");
+      return session.send("displayMessage", {
+        message: val
+      }, function(err, data) {
+        if (err) {
+          return console.log("error", err);
+        }
+      });
+    });
+  });
+
   castAway.initialize(function(err, data) {
     if (err) {
       return console.log("error initialized", err);

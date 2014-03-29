@@ -64,6 +64,7 @@
     };
 
     CastAway.prototype.sessionListener = function(session) {
+      debugger;
       if (session.media.length !== 0) {
         this.currentSession = session;
         session.addUpdateListener(this.sessionUpdateListener);

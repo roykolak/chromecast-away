@@ -29,6 +29,7 @@ class CastAway extends EventEmitter
     @receiver
 
   sessionListener: (session) ->
+    debugger
     if session.media.length != 0
       @currentSession = session
       session.addUpdateListener(@sessionUpdateListener)

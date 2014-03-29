@@ -20,6 +20,19 @@ castAway.on "receivers:available", ->
           if err
             console.log "error", err
 
+castAway.on 'existingMediaFound', (session) ->
+  debugger
+  window.session = session
+  $("#start-panel").hide()
+  $("#message-panel").show()
+  $("#send-message").click (e) ->
+    val = $("#message").val()
+    console.log "Sending #{val}"
+    $("#message").val("")
+    session.send "displayMessage", message: val, (err, data) ->
+      if err
+        console.log "error", err
+
 castAway.initialize (err, data) ->
   if err
     console.log "error initialized", err
