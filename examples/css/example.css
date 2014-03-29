@@ -57,7 +57,7 @@ section:last-child {
 }
 .cast {
   float: right;
-  background-image: url(images/cast_icon_idle.png);
+  background-image: url(../images/cast_icon_idle.png);
   background-repeat: no-repeat;
   background-size: 40px;
   width: 50px;
@@ -65,13 +65,13 @@ section:last-child {
   display: block;
 }
 .cast.idle {
-  background-image: url(images/cast_icon_idle.png);
+  background-image: url(../images/cast_icon_idle.png);
 }
 .cast.active {
-  background-image: url(images/cast_icon_active.png);
+  background-image: url(../images/cast_icon_active.png);
 }
 .cast.error {
-  background-image: url(images/cast_icon_error.png);
+  background-image: url(../images/cast_icon_error.png);
 }
 .controls {
   display: none;
