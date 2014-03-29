@@ -95,3 +95,8 @@ a.release {
   background: #1463FF;
   border-radius: 20px;
 }
+img.stylized {
+  position: fixed;
+  bottom: 0;
+  width: 300px;
+}

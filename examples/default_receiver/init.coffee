@@ -1,6 +1,7 @@
 # A reusable media control view that gets passed an active session
 # and control object to interaction with a cast session.
 sessionView = new MediaSessionView()
+sessionView.render()
 
 mediaConfig =
   music:

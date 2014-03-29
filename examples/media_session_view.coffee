@@ -2,6 +2,28 @@ class MediaSessionView
   constructor: ->
     @$el = $('.session')
 
+  template: """
+    <div class="controls">
+      <a href="#" class="release">
+        <i class="fa fa-times"></i>
+      </a>
+      <a href="#" class="pause">
+        <i class="fa fa-pause"></i>
+      </a>
+      <a href="#" class="play">
+        <i class="fa fa-play"></i>
+      </a>
+      <a href="#" class="stop">
+        <i class="fa fa-stop"></i>
+      </a>
+    </div>
+    <h3 class="receiver_name">Not Casting</h3>
+    <p class="display_name"></p>
+  """
+
+  render: ->
+    @$el.html @template
+
   attachEvents: (session, controls) ->
     $('.controls', @$el).show()
 

@@ -4,6 +4,8 @@
 
   sessionView = new MediaSessionView();
 
+  sessionView.render();
+
   mediaConfig = {
     music: {
       url: 'https://s3.amazonaws.com/roysfunfun/ghostbuster_ringtone.mp3',

@@ -7,6 +7,12 @@
       this.$el = $('.session');
     }
 
+    MediaSessionView.prototype.template = "<div class=\"controls\">\n  <a href=\"#\" class=\"release\">\n    <i class=\"fa fa-times\"></i>\n  </a>\n  <a href=\"#\" class=\"pause\">\n    <i class=\"fa fa-pause\"></i>\n  </a>\n  <a href=\"#\" class=\"play\">\n    <i class=\"fa fa-play\"></i>\n  </a>\n  <a href=\"#\" class=\"stop\">\n    <i class=\"fa fa-stop\"></i>\n  </a>\n</div>\n<h3 class=\"receiver_name\">Not Casting</h3>\n<p class=\"display_name\"></p>";
+
+    MediaSessionView.prototype.render = function() {
+      return this.$el.html(this.template);
+    };
+
     MediaSessionView.prototype.attachEvents = function(session, controls) {
       $('.controls', this.$el).show();
       $('.pause', this.$el).click((function(_this) {
