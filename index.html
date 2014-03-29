@@ -220,8 +220,8 @@
   <h4>Receiver Code</h4>
   <pre>
     <code>
-      <h1>Put Messages on Your TV!</h1>
-      <ul id="messages"></ul>
+      &lt;h1&gt;Put Messages on Your TV!&lt;/h1&gt;
+      &lt;ul id="messages"&gt;&lt;/ul&gt;
     </code>
   </pre>
   <pre>
@@ -230,14 +230,14 @@
       receiver = castAway.receive()
 
       receiver.on "displayMessage", (data) ->
-        $("#messages").append "<li>" + data.message + "</li>"
+        $("#messages").append "&lt;li&gt;#{data.message}&lt;/li&gt;"
     </code>
   </pre>
   <h4>Sender Code</h4>
   <pre>
     <code>
-      <h1>Put Messages on Your TV!</h1>
-      <input id="message" type="text" /><button id="send-message">Send</button>
+      &lt;h1&gt;Put Messages on Your TV!&lt;/h1&gt;
+      &lt;input id="message" type="text" /&gt;&lt;button id="send-message">Send&lt;/button&gt;
     </code>
   </pre>
   <pre>
