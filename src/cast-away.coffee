@@ -31,11 +31,10 @@ class CastAway extends EventEmitter
     # is registered to __onGCastApiAvailable may be defined
     # after the it has already fired. This polls to
     # make sure that the API is appropriately initialized.
-    intervalId = null
     intervalId = setInterval (->
       if chrome.cast && chrome.cast.isAvailable && chrome.cast.media && chrome.cast.SessionRequest
-        initializeCastApi()
         clearInterval(intervalId)
+        initializeCastApi()
     ), 15
 
   receive: (config={}) ->

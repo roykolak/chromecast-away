@@ -51,11 +51,10 @@
           return _this.cast.initialize(apiConfig, success, error);
         };
       })(this);
-      intervalId = null;
       return intervalId = setInterval((function() {
         if (chrome.cast && chrome.cast.isAvailable && chrome.cast.media && chrome.cast.SessionRequest) {
-          initializeCastApi();
-          return clearInterval(intervalId);
+          clearInterval(intervalId);
+          return initializeCastApi();
         }
       }), 15);
     };
