@@ -24,10 +24,6 @@ class CastAway extends EventEmitter
 
       @cast.initialize(apiConfig, success, error)
 
-    window['__onGCastApiAvailable'] = (loaded, errorInfo) =>
-      if loaded
-        initializeCastApi()
-
     # Initialize Chromecast with this one weird trick!
     # Developers hate us!
     # Because of the way the chromecast API is loaded,
