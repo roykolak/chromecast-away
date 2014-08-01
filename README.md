@@ -1,9 +1,9 @@
 CastAway
 =====================
 
-A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.
+[![NPM version](https://badge.fury.io/js/chromecast-away.svg)](http://badge.fury.io/js/chromecast-away)
 
-_Still in heavy development._
+A nice, friendly wrapper for Chromecast that doesn't judge you and always sends thank you cards upon receiving something nice from a friend because it appreciates emotional responses.
 
 Supports:
 
