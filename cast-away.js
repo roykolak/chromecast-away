@@ -27,31 +27,36 @@
     }
 
     CastAway.prototype.initialize = function(cb) {
-      return window['__onGCastApiAvailable'] = (function(_this) {
-        return function(loaded, errorInfo) {
+      var initializeCastApi, intervalId;
+      initializeCastApi = (function(_this) {
+        return function() {
           var apiConfig, app, error, sessionRequest, success;
-          if (loaded) {
-            app = _this.applicationID || _this.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID;
-            sessionRequest = new _this.cast.SessionRequest(app);
-            apiConfig = new _this.cast.ApiConfig(sessionRequest, function() {
-              var data;
-              data = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-              return _this.sessionListener.apply(_this, data);
-            }, function() {
-              var data;
-              data = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-              return _this.receiverListener.apply(_this, data);
-            });
-            success = function(data) {
-              return cb(null, data);
-            };
-            error = function(err) {
-              return cb(err);
-            };
-            return _this.cast.initialize(apiConfig, success, error);
-          }
+          app = _this.applicationID || _this.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID;
+          sessionRequest = new _this.cast.SessionRequest(app);
+          apiConfig = new _this.cast.ApiConfig(sessionRequest, function() {
+            var data;
+            data = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            return _this.sessionListener.apply(_this, data);
+          }, function() {
+            var data;
+            data = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            return _this.receiverListener.apply(_this, data);
+          });
+          success = function(data) {
+            return cb(null, data);
+          };
+          error = function(err) {
+            return cb(err);
+          };
+          return _this.cast.initialize(apiConfig, success, error);
         };
       })(this);
+      return intervalId = setInterval((function() {
+        if (chrome.cast && chrome.cast.isAvailable && chrome.cast.media && chrome.cast.SessionRequest) {
+          clearInterval(intervalId);
+          return initializeCastApi();
+        }
+      }), 15);
     };
 
     CastAway.prototype.receive = function(config) {

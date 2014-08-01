@@ -9,19 +9,33 @@ class CastAway extends EventEmitter
     @cast = chrome?.cast || cast
 
   initialize: (cb) ->
-    window['__onGCastApiAvailable'] = (loaded, errorInfo) =>
-      if loaded
-        app = @applicationID || @cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
 
-        sessionRequest = new @cast.SessionRequest(app)
-        apiConfig = new @cast.ApiConfig sessionRequest,
-          (data...) => @sessionListener(data...),
-          (data...) => @receiverListener(data...)
+    initializeCastApi = =>
+      app = @applicationID || @cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
 
-        success = (data) -> cb(null, data)
-        error = (err) -> cb(err)
+      sessionRequest = new @cast.SessionRequest(app)
+      apiConfig = new @cast.ApiConfig sessionRequest,
+        (data...) => @sessionListener(data...),
+        (data...) => @receiverListener(data...)
 
-        @cast.initialize(apiConfig, success, error)
+      success = (data) -> cb(null, data)
+
+      error = (err) -> cb(err)
+
+      @cast.initialize(apiConfig, success, error)
+
+    # Initialize Chromecast with this one weird trick!
+    # Developers hate us!
+    # Because of the way the chromecast API is loaded,
+    # there is a chance that the initialization callback
+    # is registered to __onGCastApiAvailable may be defined
+    # after the it has already fired. This polls to
+    # make sure that the API is appropriately initialized.
+    intervalId = setInterval (->
+      if chrome.cast && chrome.cast.isAvailable && chrome.cast.media && chrome.cast.SessionRequest
+        clearInterval(intervalId)
+        initializeCastApi()
+    ), 15
 
   receive: (config={}) ->
     @receiver = new CustomReceiver(config, this)
