@@ -1,5 +1,5 @@
 {
-  "name": "chromecast-wrapper",
+  "name": "chromecast-away",
   "description": "A friendly Chromecast wrapper",
   "version": "0.1.1",
   "author": "Roy Kolak <roy.kolak@gmail.com>",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/roykolak/chromecast-wrapper.git"
+    "url": "http://github.com/roykolak/chromecast-away.git"
   },
   "devDependencies": {
     "coffee-script": "1.7.1",
