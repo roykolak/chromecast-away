@@ -1,7 +1,7 @@
 {
   "name": "chromecast-wrapper",
   "description": "A friendly Chromecast wrapper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Roy Kolak <roy.kolak@gmail.com>",
   "scripts": {
     "start": "node_modules/.bin/coffee dev.coffee"
