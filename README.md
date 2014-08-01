@@ -1,4 +1,4 @@
-CastAway
+ChromecastAway
 =====================
 
 [![NPM version](https://badge.fury.io/js/chromecast-away.svg)](http://badge.fury.io/js/chromecast-away)
