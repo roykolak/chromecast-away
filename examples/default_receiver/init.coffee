@@ -11,7 +11,7 @@ mediaConfig =
     albumArtist: 'Album artist'
     artist: 'Music artist'
     composer: 'Composer'
-    images: ["http://www.biography.com/imported/images/Biography/Images/Profiles/S/Will-Smith-9542165-1-402.jpg"]
+    images: ['http://www.popstarsplus.com/images/WillSmithPicture.jpg']
 
   tvShow:
     url:'http://commondatastorage.googleapis.com/gtv-videos-bucket/ED_1280.mp4'
