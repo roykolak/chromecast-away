@@ -1,0 +1,17 @@
+{
+  "name": "chromecast-away",
+  "version": "0.1.2",
+  "homepage": "https://github.com/roykolak/chromecast-away",
+  "authors": [
+    "Roy Kolak <roy.kolak@gmail.com>"
+  ],
+  "description": "A friendly, nonjudgemental js library for chromecasting",
+  "main": "cast-away.js",
+  "keywords": [
+    "google",
+    "chrome",
+    "chromecast",
+    "cast"
+  ],
+  "license": "MIT"
+}
