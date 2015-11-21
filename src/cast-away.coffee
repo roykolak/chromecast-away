@@ -5,10 +5,10 @@ CustomReceiver = require('./custom-receiver')
 
 class CastAway extends EventEmitter
   constructor: ({@applicationID, @namespace} = {}) ->
-    throw "chrome.cast namespace not found" unless chrome?.cast || cast
-    @cast = chrome?.cast || cast
+    @cast = chrome?.cast || cast?
 
   initialize: (cb) ->
+    return unless @cast
 
     initializeCastApi = =>
       app = @applicationID || @cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
